@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>发货资料整理助手_高级设置版</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--brand:#2563eb;--good:#16a34a;--warn:#f59e0b;--bad:#dc2626}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Microsoft YaHei",sans-serif}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:18px}
+  h1{font-size:28px;margin:0 0 8px}.sub{color:var(--muted);line-height:1.6}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 26px rgba(15,23,42,.06);padding:20px;margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.upload{border:1.5px dashed #cbd5e1;border-radius:16px;padding:18px;background:#fbfdff}.upload h3{margin:0 0 10px;font-size:16px}.upload p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
+  input[type=file]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:white}.btn{border:0;border-radius:12px;padding:13px 18px;background:var(--brand);color:white;font-weight:700;cursor:pointer;font-size:15px}.btn:disabled{background:#9ca3af;cursor:not-allowed}.btn2{background:#111827}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.pill{display:inline-flex;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700;padding:7px 11px;font-size:12px}.small{font-size:12px;color:var(--muted)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.step{background:#f9fafb;border:1px solid var(--line);border-radius:14px;padding:14px}.step b{display:block;margin-bottom:6px}.step span{font-size:12px;color:var(--muted);line-height:1.5}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.kpi{background:#f9fafb;border:1px solid var(--line);border-radius:14px;padding:14px}.kpi .v{font-size:24px;font-weight:800}.kpi .t{font-size:12px;color:var(--muted);margin-top:4px}
+  table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:#f9fafb;font-weight:800}.log{height:260px;overflow:auto;background:#0f172a;color:#dbeafe;border-radius:14px;padding:13px;font-family:Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap}.ok{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+  .hide{display:none}.hint{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:14px;padding:12px 14px;line-height:1.6;font-size:13px}.footer{color:var(--muted);font-size:12px;margin-top:12px;line-height:1.6}
+  .bar{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden}.bar>div{height:100%;width:0;background:#2563eb;transition:width .15s}
+  .sheetmap{margin-top:12px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px}.sheetmap-title{font-weight:800;margin-bottom:6px}.sheetrow{display:grid;grid-template-columns:1.2fr 1fr;gap:10px;align-items:center;border-top:1px solid #f1f5f9;padding:9px 0}.sheetrow:first-of-type{border-top:0}.sheetrow input{width:100%;padding:8px;border:1px solid var(--line);border-radius:9px}.sheetname{font-weight:700;word-break:break-all}
+  .settings{background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:14px}.settings summary{cursor:pointer;font-weight:800;list-style:none}.settings summary::-webkit-details-marker{display:none}.settings summary:before{content:'⚙ ';}.setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-top:14px}.checkline{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.45}.checkline input{margin-top:2px}.checkline span{color:var(--muted);display:block;font-size:12px;margin-top:2px}
+  @media(max-width:860px){.grid,.steps,.kpis,.setting-grid{grid-template-columns:1fr}.hero{display:block}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div><h1>发货资料整理助手</h1><div class="sub">上传发货清单和资料压缩包，直接输出为本地文件夹，避免再次打 ZIP 导致压缩包无效。</div></div>
+    <span class="pill">本地浏览器处理 · 直接写入文件夹</span>
+  </div>
+
+  <div class="card">
+    <div class="steps">
+      <div class="step"><b>1. 读取发货清单</b><span>识别 出库单号 / 工厂 / 物流 / 三方仓外箱贴，并支持按 Sheet 设置站点和物流资料文件名。</span></div>
+      <div class="step"><b>2. 扫描压缩包</b><span>识别 OBxxxx_仓库 文件夹、内部 ASNxxxx_OBxxxx.pdf，以及表格填写的货代箱唛/入仓单文件。</span></div>
+      <div class="step"><b>3. 自动回填</b><span>将 PDF 前缀 ASN 编号写入对应 OB 行，并按表格文件名复制货代箱唛/入仓单。</span></div>
+      <div class="step"><b>4. 输出文件夹</b><span>直接生成 发货文件 / 工厂 / 发货明细 + 站点 / 物流 / OB文件夹，公共物流资料会复制到对应OB。</span></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="upload">
+      <h3>发货清单 Excel</h3>
+      <p>支持多工作表读取：可按每个工作表设置站点，例如 Sheet1=US、Sheet2=UK。留空则使用表内站点列。</p>
+      <input id="excelFile" type="file" accept=".xlsx,.xls" />
+      <div id="sheetSiteCard" class="sheetmap hide">
+        <div class="sheetmap-title">工作表站点设置</div>
+        <div class="small">每个 Sheet 最多对应一个站点。工具会优先使用这里填写的站点覆盖表内站点，留空则使用表内站点列；如果表内也没有站点，则不启用站点层级。</div>
+        <div id="sheetSiteBox"></div>
+      </div>
+    </div>
+    <div class="upload">
+      <h3>发货资料压缩包 ZIP</h3>
+      <p>压缩包内包含 OB单号+仓库 的文件夹，外箱贴 PDF 在对应 OB 文件夹内部。</p>
+      <input id="zipFile" type="file" accept=".zip" />
+    </div>
+  </div>
+
+  <div class="card">
+    <details class="settings" id="settingsPanel">
+      <summary>高级设置</summary>
+      <div class="setting-grid">
+        <label class="checkline"><input type="checkbox" id="optKeepPacking" /> <div>保留原始装箱清单<span>默认关闭。关闭时会跳过 OB 文件夹内原始“装箱单/装箱清单”，只保留系统拆分后的发货明细。</span></div></label>
+        <label class="checkline"><input type="checkbox" id="optFlatLogistics" checked /> <div>物流资料直接放入 OB 文件夹<span>推荐开启。开启后输出“货代箱唛_原文件名 / 入仓单_原文件名”；关闭后恢复为子文件夹。</span></div></label>
+        <label class="checkline"><input type="checkbox" id="optRemoveAux" checked /> <div>删除辅助列<span>推荐开启。拆分后的发货明细不保留“箱唛文件名/入仓单文件名”。</span></div></label>
+        <label class="checkline"><input type="checkbox" id="optExportErrors" checked /> <div>导出异常报告<span>关闭后不生成“异常报告.xlsx”，但页面仍会展示异常预览。</span></div></label>
+        <label class="checkline"><input type="checkbox" id="optUseSheetSite" checked /> <div>按 Sheet 指定站点<span>开启后可在上传区按 Sheet 填写 US/UK/EU 等站点；关闭后只读取表格内站点列。</span></div></label>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <button class="btn" id="runBtn">开始整理到本地文件夹</button>
+      <button class="btn btn2" id="clearBtn">清空日志</button>
+      <span class="small">请使用新版 Chrome / Edge；执行时会要求选择一个输出文件夹。</span>
+    </div>
+    <div class="footer">输出结构：发货文件_整理结果_时间 / 工厂 / 发货明细_工厂.xlsx + 站点 / 物流 / OB文件夹。站点可从表内站点列读取，也可按 Sheet 手动设置；没有站点时自动降级为：工厂 / 物流 / OB文件夹。不会生成空站点或空物流文件夹。若发货清单命名列填写“箱唛文件名 / 入仓单文件名”，工具会从同一个 ZIP 中查找并复制到对应 OB 文件夹；可在高级设置中控制是否删除辅助列、是否平铺物流资料、是否保留原始装箱清单。</div>
+  </div>
+
+  <div class="card hide" id="progressCard">
+    <div class="small" id="progressText">准备中...</div>
+    <div class="bar" style="margin-top:8px"><div id="progressBar"></div></div>
+  </div>
+
+  <div class="card hide" id="resultCard">
+    <div class="kpis">
+      <div class="kpi"><div class="v" id="kRows">0</div><div class="t">发货清单行数</div></div>
+      <div class="kpi"><div class="v" id="kFactories">0</div><div class="t">工厂数</div></div>
+      <div class="kpi"><div class="v" id="kFolders">0</div><div class="t">已归类OB文件夹</div></div>
+      <div class="kpi"><div class="v" id="kAsn">0</div><div class="t">回填外箱贴</div></div>
+      <div class="kpi"><div class="v" id="kErr">0</div><div class="t">异常数量</div></div>
+    </div>
+  </div>
+
+  <div class="card hide" id="previewCard">
+    <h3 style="margin-top:0">异常预览</h3>
+    <div id="errBox"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">执行日志</h3>
+    <div class="log" id="log"></div>
+  </div>
+
+  <div class="hint">
+    这版不再生成二次 ZIP，而是直接写入你选择的输出文件夹。匹配规则：从 OB 文件夹名和 PDF 文件名中提取 <b>OB+数字</b>；外箱贴使用 PDF 文件名第一个下划线前的内容，例如 <b>ASN202606230000006_OB2606234576.pdf</b> 会回填 <b>ASN202606230000006</b>。多工作表可在上传区设置站点，工具会优先按 Sheet 站点拆分。发货清单可增加“货代箱唛”“入仓单”两列，同一个文件名可填写在多个OB行，工具会自动复制到多个OB文件夹；导出的工厂发货明细是否删除这两列，可在高级设置中控制。物流资料文件名采用“OB上下文安全匹配”：优先完整文件名匹配，兼容下载(1)/(2)、副本/copy、空格/连接符/中英文符号差异、.xlx/.xls/.xlsx 误写；如果表格只填了部分文件名，只会在当前OB范围内做前后缀匹配，不再做全局包含模糊匹配。辅助资料列会严格识别“箱唛文件名 / 入仓单文件名”，不会再把“物流=海运/卡航”当作文件名。
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const logEl = $('log');
+function log(msg, type='') { const line = `[${new Date().toLocaleTimeString()}] ${msg}`; logEl.innerHTML += (type?`<span class="${type}">${escapeHtml(line)}</span>`:escapeHtml(line)) + '\n'; logEl.scrollTop = logEl.scrollHeight; }
+function getOptions(){
+  return {
+    keepPacking: $('optKeepPacking') ? $('optKeepPacking').checked : false,
+    flatLogistics: $('optFlatLogistics') ? $('optFlatLogistics').checked : true,
+    removeAux: $('optRemoveAux') ? $('optRemoveAux').checked : true,
+    exportErrors: $('optExportErrors') ? $('optExportErrors').checked : true,
+    useSheetSite: $('optUseSheetSite') ? $('optUseSheetSite').checked : true
+  };
+}
+function saveOptions(){
+  try{ localStorage.setItem('shippingOrganizerOptions', JSON.stringify(getOptions())); }catch(e){}
+}
+function loadOptions(){
+  let opts = {};
+  try{ opts = JSON.parse(localStorage.getItem('shippingOrganizerOptions') || '{}') || {}; }catch(e){}
+  const defaults = {keepPacking:false, flatLogistics:true, removeAux:true, exportErrors:true, useSheetSite:true};
+  const finalOpts = Object.assign(defaults, opts);
+  const ids = {keepPacking:'optKeepPacking', flatLogistics:'optFlatLogistics', removeAux:'optRemoveAux', exportErrors:'optExportErrors', useSheetSite:'optUseSheetSite'};
+  Object.entries(ids).forEach(([k,id]) => { if($(id)) $(id).checked = !!finalOpts[k]; });
+}
+function isPackingListFile(fileName){
+  const n = String(fileName || '').normalize('NFKC').toLowerCase();
+  return /装箱(清单|单)/.test(n) && /\.(xlsx|xls|xlsm|xlx)$/i.test(n);
+}
+function prefixLogisticsFileName(typeName, originalName){
+  const b = baseName(originalName);
+  if(!b) return `${typeName}_未命名文件`;
+  if(b.startsWith(typeName + '_') || b.startsWith(`【${typeName}】`)) return b;
+  return `${typeName}_${b}`;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+function cleanName(s){
+  // File System Access API 对文件/文件夹名比 Windows 更严格：
+  // 空名称、.、..、控制字符、保留设备名、末尾点/空格等都会触发 Name is not allowed。
+  let name = String(s ?? '')
+    .normalize('NFKC')
+    .replace(/[\x00-\x1F\x7F]/g, '_')
+    .replace(/[\\/:*?"<>|]/g, '_')
+    .replace(/\s+/g, ' ')
+    .trim();
+  name = name.replace(/[.\s]+$/g, '').trim();
+  if(!name || name === '.' || name === '..') name = '未填写';
+  if(/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i.test(name)) name = '_' + name;
+  if(name.length > 120) name = name.slice(0, 120).replace(/[.\s]+$/g, '') || '未填写';
+  return name;
+}
+function norm(s){return String(s ?? '').trim().replace(/\s+/g,'');}
+function upper(s){return String(s ?? '').trim().toUpperCase();}
+function getOB(text){ const m = String(text || '').match(/OB\d+/i); return m ? m[0].toUpperCase() : ''; }
+function getAsnPrefix(fileName, ob){
+  const base = fileName.split('/').pop().replace(/\.[^.]+$/,'');
+  if (base.includes('_')) return base.split('_')[0].trim();
+  const idx = base.toUpperCase().indexOf(ob.toUpperCase());
+  return idx > 0 ? base.slice(0, idx).replace(/[_\-\s]+$/,'').trim() : '';
+}
+
+function baseName(path){ return String(path || '').replace(/\\/g,'/').split('/').pop() || ''; }
+function stripExt(name){ return String(name || '').replace(/\.[^.]+$/,''); }
+function getExt(name){
+  const b = baseName(name);
+  const m = b.match(/(\.[A-Za-z0-9]{1,10})\.?$/);
+  return m ? m[1].toLowerCase() : '';
+}
+function comparableExt(ext){
+  // 保留扩展名原则，但兼容 Excel 常见误写：.xlx/.xls/.xlsx。
+  const e = String(ext || '').toLowerCase();
+  if(['.xlsx','.xls','.xlsm','.xlx'].includes(e)) return '.excel';
+  return e;
+}
+function cleanupFileStem(name, mode='exact'){
+  let raw = baseName(name).normalize('NFKC').trim().replace(/[.\s]+$/g, '');
+  const ext = getExt(raw);
+  let stem = ext ? raw.slice(0, -ext.length) : raw;
+  stem = stem.replace(/\s+/g, ' ').trim();
+
+  // 下载重复编号：xxx(1)、xxx（2）
+  if(mode === 'dedupe' || mode === 'copy' || mode === 'compact'){
+    stem = stem.replace(/[\s_\-]*[\(（]\d+[\)）]$/i, '').trim();
+  }
+  // 副本/copy
+  if(mode === 'copy' || mode === 'compact'){
+    stem = stem.replace(/[\s_\-]*(副本|复制|copy)$/i, '').trim();
+  }
+  if(mode === 'compact'){
+    stem = stem
+      .replace(/[\s_\-—–]+/g, '')
+      .replace(/[()（）\[\]【】]/g, '')
+      .replace(/[，,。\.、]+/g, '');
+
+    // 处理聊天/表格复制时多出来的中转号：
+    // 例：HPT11990689 T119906892件德国卡航-唛头_1-2.pdf
+    // 实际：HPT11990689 2件德国卡航-唛头_1-2(1).pdf
+    // 只删除前面有空格/连接符分隔的独立 T+数字，避免误删 HPT11990689 里的 T11990689。
+    stem = stem.replace(/(^|[\s_\-—–])T\d+(?=\d+件)/ig, '$1');
+  }
+  return norm(stem).toLowerCase();
+}
+function strictFileKey(name, mode='exact'){
+  const raw = baseName(name).normalize('NFKC').trim().replace(/[.\s]+$/g, '');
+  const ext = getExt(raw);
+  return cleanupFileStem(name, mode) + comparableExt(ext);
+}
+function strictStemKey(name, mode='exact'){
+  return cleanupFileStem(name, mode);
+}
+function fileExactKey(name){
+  return norm(baseName(name).normalize('NFKC')).toLowerCase();
+}
+function fileMatchKey(name){ return strictStemKey(name, 'compact'); }
+function fileStemKey(name){ return strictStemKey(name, 'compact'); }
+function parseFileListCell(v){
+  return String(v ?? '').split(/[;；\n\r]+/).map(x=>x.trim()).filter(Boolean);
+}
+function addSetObj(obj, key, val){
+  if(!key || !val) return;
+  if(!obj[key]) obj[key] = new Set();
+  obj[key].add(val);
+}
+function findZipEntryByRequestedName(requested, entries, currentOB=''){
+  const reqRaw = String(requested || '').trim();
+  if(!reqRaw) return {entry:null, reason:'空文件名'};
+  const reqBase = baseName(reqRaw);
+  const reqExt = comparableExt(getExt(reqBase));
+  const ob = upper(currentOB);
+
+  const levels = [
+    {name:'精确匹配', mode:'exact'},
+    {name:'忽略下载重复编号匹配', mode:'dedupe'},
+    {name:'忽略副本/copy匹配', mode:'copy'},
+    {name:'格式归一匹配', mode:'compact'}
+  ];
+
+  function matchEqual(candidateEntries){
+    for(const level of levels){
+      const targetKey = reqExt ? strictFileKey(reqBase, level.mode) : strictStemKey(reqBase, level.mode);
+      const matches = candidateEntries.filter(e => {
+        if(reqExt && comparableExt(getExt(e.name)) !== reqExt) return false;
+        const key = reqExt ? strictFileKey(e.name, level.mode) : strictStemKey(e.name, level.mode);
+        return key === targetKey;
+      });
+      if(matches.length === 1) return {entry:matches[0], reason:level.name};
+      if(matches.length > 1) return {
+        entry:null,
+        reason:`${level.name}匹配到多个文件：` + matches.slice(0,5).map(e=>baseName(e.name)).join('；')
+      };
+    }
+    return null;
+  }
+
+  // 第一优先级：全 ZIP 内完整一致/下载编号/副本/格式归一的等值匹配。
+  // 这一步不使用 contains，避免 HPT/箱唛前缀相同导致乱匹配。
+  let hit = matchEqual(entries);
+  if(hit) return hit;
+
+  // 第二优先级：仅在当前 OB 范围内做安全前后缀匹配。
+  // 解决：表格填“7件...OB...进仓单”，实际文件为“7件...OB...进仓单HPT11990689.xlsx”；
+  // 以及表格填“HPT11990689.xlsx”，实际文件为“7件...OB...进仓单HPT11990689.xlsx”。
+  if(ob){
+    const obEntries = entries.filter(e => getOB(e.name) === ob);
+    if(obEntries.length){
+      for(const level of levels){
+        const targetStem = strictStemKey(reqBase, level.mode);
+        const targetExt = reqExt;
+        const matches = obEntries.filter(e => {
+          if(targetExt && comparableExt(getExt(e.name)) !== targetExt) return false;
+          const stem = strictStemKey(e.name, level.mode);
+          if(!targetStem || !stem) return false;
+          // 只允许当前 OB 范围内的前缀/后缀关系，不做任意包含，降低误匹配。
+          return stem.startsWith(targetStem) || stem.endsWith(targetStem) || targetStem.startsWith(stem) || targetStem.endsWith(stem);
+        });
+        if(matches.length === 1) return {entry:matches[0], reason:`当前OB内${level.name}前后缀匹配`};
+        if(matches.length > 1) return {
+          entry:null,
+          reason:`当前OB内${level.name}前后缀匹配到多个文件：` + matches.slice(0,5).map(e=>baseName(e.name)).join('；')
+        };
+      }
+    }
+  }
+
+  return {entry:null, reason:'ZIP内未找到该文件名；已尝试完整一致、下载(1)/(2)、副本/copy、空格/连接符格式差异；若表格只填部分文件名，仅会在当前OB范围内做安全前后缀匹配，不再做全局包含模糊匹配'};
+}
+function normLogistics(v){
+  const x = norm(v);
+  if (!x) return '未填写物流';
+  if (['空运','空派','空派渠道','空运渠道'].includes(x)) return '空派';
+  if (['快递','快递渠道'].includes(x)) return '快递';
+  if (['海运','海派','海运渠道'].includes(x)) return '海运';
+  if (['卡航','卡派','卡航渠道'].includes(x)) return '卡航';
+  return x;
+}
+function isDateHeader(h){
+  const x = norm(h).toLowerCase();
+  return /日期|时间|eta|etd|进仓|发货|到货|货好|装柜|开船|入仓|出库/.test(x);
+}
+function formatExcelDateValue(v){
+  if (v === null || v === undefined || v === '') return v;
+  if (v instanceof Date && !isNaN(v)) {
+    const y=v.getFullYear(), m=String(v.getMonth()+1).padStart(2,'0'), d=String(v.getDate()).padStart(2,'0');
+    return `${y}-${m}-${d}`;
+  }
+  const n = typeof v === 'number' ? v : (/^\d{5}(\.\d+)?$/.test(String(v).trim()) ? Number(String(v).trim()) : NaN);
+  if (!isNaN(n) && n > 20000 && n < 80000 && XLSX && XLSX.SSF && XLSX.SSF.parse_date_code) {
+    const d = XLSX.SSF.parse_date_code(n);
+    if (d) return `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
+  }
+  return v;
+}
+function normalizeDateColumns(rows, headers){
+  const dateCols = headers.map((h,i)=>isDateHeader(h)?i:-1).filter(i=>i>=0);
+  rows.forEach(row => dateCols.forEach(i => { row[i] = formatExcelDateValue(row[i]); }));
+}
+function findHeaderIndex(aoa){
+  for(let r=0;r<Math.min(20, aoa.length);r++){
+    const row = aoa[r].map(norm);
+    if(row.some(x=>x.includes('出库单号'))) return r;
+  }
+  return 0;
+}
+function findCol(headers, aliases, required=true){
+  const hs = headers.map(h=>norm(h));
+  for(const a of aliases){ const ai = norm(a); const i = hs.findIndex(h=>h === ai); if(i>=0) return i; }
+  for(const a of aliases){ const ai = norm(a); const i = hs.findIndex(h=>h.includes(ai) || ai.includes(h)); if(i>=0) return i; }
+  if(required) throw new Error('发货清单缺少字段：' + aliases.join('/'));
+  return -1;
+}
+
+function findAuxCol(headers, kind){
+  // 辅助资料列必须严格识别，不能用“alias.includes(header)”这种宽松逻辑。
+  // 否则 alias=物流箱唛 会误命中 header=物流，导致把海运/卡航当成文件名。
+  const hs = headers.map(h => norm(h));
+  const freightExact = ['货代箱唛','物流箱唛','货代箱标','物流箱标','箱唛文件','箱唛文件名','货代箱唛文件名','物流箱唛文件名','货代箱标文件名','物流箱标文件名','箱唛'];
+  const inboundExact = ['入仓单','入仓贴','入仓预约单','预约单','入仓文件','入仓单文件名','入仓贴文件名','入仓预约单文件名','预约单文件名','进仓单文件名'];
+  const exactList = (kind === 'freight') ? freightExact : inboundExact;
+  for(const a of exactList){
+    const ai = norm(a);
+    const idx = hs.findIndex(h => h === ai);
+    if(idx >= 0) return idx;
+  }
+  for(let i=0;i<headers.length;i++){
+    const h = String(headers[i] || '').replace(/\s+/g,'');
+    if(kind === 'freight'){
+      // 必须同时具备“箱唛/箱标/mark”语义，并排除单独的“物流/运输方式/渠道”。
+      if(/(箱唛|箱标|mark)/i.test(h) && !/^(物流|运输方式|海运方式|渠道|物流渠道)$/.test(h)) return i;
+    } else {
+      // 入仓资料列不能误命中“进仓日期”。
+      if(/(入仓单|入仓贴|入仓预约单|预约单|入仓文件|进仓单)/.test(h) && !/(日期|时间)$/.test(h)) return i;
+    }
+  }
+  return -1;
+}
+function readFileAsArrayBuffer(file){ return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsArrayBuffer(file); }); }
+
+function decodeZipFileName(bytes){
+  // 兼容 Windows 中文 ZIP 文件名：很多压缩包不是 UTF-8，而是 GBK/GB18030。
+  // 如果不处理，中文文件名会变成乱码，导致“文件未识别OB/文件未找到”。
+  try { return new TextDecoder('gb18030').decode(bytes); } catch(e) {}
+  try { return new TextDecoder('gbk').decode(bytes); } catch(e) {}
+  try { return new TextDecoder('utf-8').decode(bytes); } catch(e) {}
+  let s = '';
+  for (let i=0;i<bytes.length;i++) s += String.fromCharCode(bytes[i]);
+  return s;
+}
+function looksLikeFreightMarkHeader(h){ return /货代.*箱|物流.*箱|箱唛|箱标|mark/i.test(String(h || '').replace(/\s+/g,'')); }
+function looksLikeInboundHeader(h){ return /入仓|进仓|预约单|入仓贴|入仓单|入仓文件/i.test(String(h || '').replace(/\s+/g,'')); }
+
+function guessSiteFromSheetName(name){
+  const x = String(name || '').toUpperCase().replace(/\s+/g,'');
+  if(/美国|美站|US|USA/.test(x)) return 'US';
+  if(/加拿大|加站|CA|CANADA/.test(x)) return 'CA';
+  if(/英国|英站|UK|GB|UNITEDKINGDOM/.test(x)) return 'UK';
+  if(/欧洲|欧盟|欧站|EU|DE|FR|IT|ES/.test(x)) return 'EU';
+  if(/日本|日站|JP|JAPAN/.test(x)) return 'JP';
+  return '';
+}
+function getSheetSiteOverrides(){
+  const map = {};
+  if($('optUseSheetSite') && !$('optUseSheetSite').checked) return map;
+  document.querySelectorAll('.sheet-site-input').forEach(inp => {
+    const sheet = inp.getAttribute('data-sheet') || '';
+    const val = String(inp.value || '').trim().toUpperCase();
+    if(sheet && val) map[sheet] = val;
+  });
+  return map;
+}
+function sameHeader(a,b){ return norm(a) === norm(b); }
+function alignRowToHeaders(row, fromHeaders, toHeaders){
+  const out = new Array(toHeaders.length).fill('');
+  toHeaders.forEach((h,i)=>{
+    const idx = fromHeaders.findIndex(fh => sameHeader(fh,h));
+    if(idx >= 0) out[i] = row[idx] ?? '';
+  });
+  return out;
+}
+async function previewSheetSiteSettings(){
+  const excel = $('excelFile').files[0];
+  const card = $('sheetSiteCard'), box = $('sheetSiteBox');
+  box.innerHTML = ''; card.classList.add('hide');
+  if(!excel) return;
+  if($('optUseSheetSite') && !$('optUseSheetSite').checked){ card.classList.add('hide'); log('已关闭“按Sheet指定站点”，将只读取表格内站点列。','warn'); return; }
+  try{
+    const buf = await readFileAsArrayBuffer(excel);
+    const wb = XLSX.read(buf, {type:'array', cellDates:false});
+    const usable = [];
+    for(const s of wb.SheetNames){
+      const data = XLSX.utils.sheet_to_json(wb.Sheets[s], {header:1, defval:''});
+      if(data.some(row => row.some(c => norm(c).includes('出库单号')))) usable.push(s);
+    }
+    if(!usable.length){ box.innerHTML = '<div class="small bad">没有识别到含“出库单号”的工作表。</div>'; card.classList.remove('hide'); return; }
+    box.innerHTML = usable.map(s=>{
+      const guessed = guessSiteFromSheetName(s);
+      return `<div class="sheetrow"><div><div class="sheetname">${escapeHtml(s)}</div><div class="small">可填 US / CA / UK / EU / JP，也可填自定义站点</div></div><input class="sheet-site-input" data-sheet="${escapeHtml(s)}" value="${escapeHtml(guessed)}" placeholder="留空=使用表内站点列" /></div>`;
+    }).join('');
+    card.classList.remove('hide');
+    log(`已识别 ${usable.length} 个含出库单号的工作表，可在上传区设置每个 Sheet 的站点。`, 'ok');
+  }catch(err){ log('读取工作表站点设置失败：' + err.message, 'bad'); }
+}
+function addSheetWidths(ws, rows){
+  const widths = [];
+  rows.forEach(row => row.forEach((v,i)=>{ widths[i] = Math.max(widths[i]||10, Math.min(36, String(v ?? '').length + 2)); }));
+  ws['!cols'] = widths.map(w=>({wch:w}));
+}
+function makeWorkbookFromRows(sheetName, rows){
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  addSheetWidths(ws, rows);
+  XLSX.utils.book_append_sheet(wb, ws, sheetName.slice(0,31) || '发货明细');
+  return wb;
+}
+function stripColumnsFromRows(headers, rows, removeIdxList){
+  const removeSet = new Set((removeIdxList || []).filter(i => Number.isInteger(i) && i >= 0));
+  const keepIdx = headers.map((_, i) => i).filter(i => !removeSet.has(i));
+  const outHeaders = keepIdx.map(i => headers[i]);
+  const outRows = rows.map(row => keepIdx.map(i => row[i] ?? ''));
+  return {headers: outHeaders, rows: outRows};
+}
+function workbookToBytes(wb){ return new Uint8Array(XLSX.write(wb, {bookType:'xlsx', type:'array'})); }
+function uniquePush(map, key, val){ if(!key || !val) return; if(!map[key]) map[key]=new Set(); map[key].add(val); }
+function htmlTable(rows){
+  if(!rows.length) return '<div class="small">暂无业务异常</div>';
+  const head = '<tr><th>类型</th><th>OB单号/文件</th><th>说明</th></tr>';
+  const body = rows.slice(0,80).map(r=>`<tr><td>${escapeHtml(r.type)}</td><td>${escapeHtml(r.key)}</td><td>${escapeHtml(r.msg)}</td></tr>`).join('');
+  return `<table>${head}${body}</table>` + (rows.length>80?`<div class="small">仅展示前80条，共${rows.length}条，完整内容见异常报告.xlsx。</div>`:'');
+}
+function setProgress(done, total, text){
+  $('progressCard').classList.remove('hide');
+  const pct = total ? Math.round(done * 100 / total) : 0;
+  $('progressBar').style.width = pct + '%';
+  $('progressText').textContent = `${text} ${done}/${total} (${pct}%)`;
+}
+async function getDir(root, parts){
+  let dir = root;
+  for(const p of parts){ dir = await dir.getDirectoryHandle(cleanName(p), {create:true}); }
+  return dir;
+}
+async function writeFile(root, parts, bytes){
+  const safeParts = (parts || []).map(cleanName).filter(Boolean);
+  const fileName = safeParts[safeParts.length-1] || '未命名文件';
+  const dirParts = safeParts.slice(0,-1);
+  try{
+    const dir = await getDir(root, dirParts);
+    const handle = await dir.getFileHandle(fileName, {create:true});
+    const writable = await handle.createWritable();
+    await writable.write(bytes instanceof Blob ? bytes : new Blob([bytes]));
+    await writable.close();
+  }catch(err){
+    const fullPath = safeParts.join('/');
+    throw new Error(`写入文件失败：${fullPath}；${err.message}`);
+  }
+}
+function getTopOBFolderName(parts, ob){
+  const idx = parts.findIndex(p => getOB(p) === ob);
+  return idx >= 0 ? parts[idx] : `${ob}_资料`;
+}
+function getInnerParts(parts, ob, fileName){
+  const idx = parts.findIndex(p => getOB(p) === ob);
+  return idx >= 0 ? parts.slice(idx+1) : [fileName];
+}
+
+loadOptions();
+document.querySelectorAll('#settingsPanel input[type=checkbox]').forEach(el => el.addEventListener('change', saveOptions));
+$('clearBtn').onclick = () => logEl.textContent = '';
+$('excelFile').addEventListener('change', previewSheetSiteSettings);
+$('runBtn').onclick = async () => {
+  const excel = $('excelFile').files[0], zipf = $('zipFile').files[0];
+  if(!excel || !zipf){ alert('请先上传发货清单 Excel 和资料 ZIP。'); return; }
+  if(!window.showDirectoryPicker){ alert('当前浏览器不支持直接输出文件夹。请用新版 Chrome 或 Edge 打开本工具。'); return; }
+  $('runBtn').disabled = true; $('resultCard').classList.add('hide'); $('previewCard').classList.add('hide');
+  $('progressBar').style.width = '0%'; $('progressCard').classList.remove('hide');
+  try{
+    const opts = getOptions(); saveOptions();
+    log(`高级设置：${opts.keepPacking ? '保留原始装箱清单' : '删除原始装箱清单'}；${opts.flatLogistics ? '物流资料平铺到OB文件夹' : '物流资料使用子文件夹'}；${opts.removeAux ? '删除辅助列' : '保留辅助列'}；${opts.exportErrors ? '导出异常报告' : '不导出异常报告'}；${opts.useSheetSite ? '启用Sheet站点设置' : '关闭Sheet站点设置'}`,'ok');
+    log('请选择输出位置。工具会在该位置下新建“发货文件_整理结果_时间”文件夹。');
+    const selectedRoot = await window.showDirectoryPicker({mode:'readwrite'});
+    const ts = new Date();
+    const stamp = `${ts.getFullYear()}${String(ts.getMonth()+1).padStart(2,'0')}${String(ts.getDate()).padStart(2,'0')}_${String(ts.getHours()).padStart(2,'0')}${String(ts.getMinutes()).padStart(2,'0')}`;
+    const outRoot = await selectedRoot.getDirectoryHandle(`发货文件_整理结果_${stamp}`, {create:true});
+    log(`输出文件夹已创建：发货文件_整理结果_${stamp}`,'ok');
+
+    log('开始读取发货清单...');
+    const excelBuf = await readFileAsArrayBuffer(excel);
+    const wb = XLSX.read(excelBuf, {type:'array', cellDates:false});
+    const sheetSiteOverrides = getSheetSiteOverrides();
+    const sheetBlocks = [];
+    let headers = null;
+
+    for(const sheetName of wb.SheetNames){
+      const aoa = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], {header:1, defval:''});
+      if(!aoa.length || !aoa.some(row => row.some(c => norm(c).includes('出库单号')))) continue;
+      const headerIdx = findHeaderIndex(aoa);
+      const shHeaders = aoa[headerIdx].map(v=>String(v ?? '').trim());
+      const shRows = aoa.slice(headerIdx+1).filter(row => row.some(v => String(v ?? '').trim() !== ''));
+      if(!headers) headers = shHeaders.slice();
+      else {
+        shHeaders.forEach(h => {
+          if(h && !headers.some(g => sameHeader(g,h))) headers.push(h);
+        });
+      }
+      sheetBlocks.push({sheetName, headers: shHeaders, rows: shRows, siteOverride: sheetSiteOverrides[sheetName] || ''});
+    }
+    if(!sheetBlocks.length) throw new Error('没有识别到含“出库单号”的工作表。');
+
+    let colSite = findCol(headers, ['站点','站点国家','国家','目的站点'], false);
+    const hasAnySheetSiteOverride = opts.useSheetSite && sheetBlocks.some(b => norm(b.siteOverride));
+    if(colSite < 0 && hasAnySheetSiteOverride){ colSite = headers.length; headers.push('站点'); }
+
+    const dataRows = [];
+    const sourceSheetByRow = [];
+    sheetBlocks.forEach(block => {
+      block.rows.forEach(srcRow => {
+        const row = alignRowToHeaders(srcRow, block.headers, headers);
+        if(opts.useSheetSite && block.siteOverride){ row[colSite] = block.siteOverride; }
+        dataRows.push(row);
+        sourceSheetByRow.push(block.sheetName);
+      });
+    });
+
+    const colOB = findCol(headers, ['出库单号','OB单号','OB']);
+    const colFactory = findCol(headers, ['工厂','供应商','工厂名称']);
+    const colLogi = findCol(headers, ['物流','运输方式','海运方式','渠道','物流渠道']);
+    colSite = findCol(headers, ['站点','站点国家','国家','目的站点'], false);
+    let colAsn = findCol(headers, ['三方仓外箱贴','三方仓外箱标','外箱贴','外箱标'], false);
+    if(colAsn < 0){ colAsn = headers.length; headers.push('三方仓外箱贴'); dataRows.forEach(r => { while(r.length <= colAsn) r.push(''); }); }
+    let colFreightMark = findAuxCol(headers, 'freight');
+    let colInbound = findAuxCol(headers, 'inbound');
+    // 辅助列识别修正：严格按“箱唛文件名/入仓单文件名”等表头识别。
+    // 不再使用普通 findCol 的宽松匹配，避免“物流箱唛”误命中“物流”列。
+    if(colFreightMark === colLogi) colFreightMark = -1;
+    if(colInbound === colLogi) colInbound = -1;
+    if(colInbound === colFreightMark && colInbound >= 0) colInbound = -1;
+    log(`物流补充资料列：货代箱唛=${colFreightMark>=0?headers[colFreightMark]:'未启用'}；入仓单=${colInbound>=0?headers[colInbound]:'未启用'}。`, (colFreightMark>=0||colInbound>=0)?'ok':'warn');
+    const auxOutputCols = opts.removeAux ? Array.from(new Set([colFreightMark, colInbound].filter(i => i >= 0))) : [];
+    if(auxOutputCols.length){
+      log(`已启用辅助列不导出：${auxOutputCols.map(i => headers[i]).join(' / ')}。这些列只用于复制物流资料，不会出现在拆分后的发货明细表中。`, 'ok');
+    } else if(!opts.removeAux) {
+      log('已设置保留辅助列：拆分后的发货明细会保留箱唛文件名/入仓单文件名列。','warn');
+    }
+    const hasSite = colSite >= 0 && dataRows.some(r => norm(r[colSite]));
+
+    normalizeDateColumns(dataRows, headers);
+    const rowListByOB = {}, factoryRows = {}, metaByOB = {}, conflictOB = new Set();
+    const freightMarkByOB = {}, inboundByOB = {}, referencedExtraNames = new Set();
+    dataRows.forEach((row, idx) => {
+      const ob = upper(row[colOB]); if(!ob) return;
+      const factory = cleanName(row[colFactory]);
+      const site = hasSite ? cleanName(row[colSite]) : '';
+      const logistics = cleanName(normLogistics(row[colLogi]));
+      if(!rowListByOB[ob]) rowListByOB[ob] = [];
+      rowListByOB[ob].push(row);
+      if(colFreightMark >= 0){
+        parseFileListCell(row[colFreightMark]).forEach(fn => { addSetObj(freightMarkByOB, ob, fn); referencedExtraNames.add(fileMatchKey(fn)); });
+      }
+      if(colInbound >= 0){
+        parseFileListCell(row[colInbound]).forEach(fn => { addSetObj(inboundByOB, ob, fn); referencedExtraNames.add(fileMatchKey(fn)); });
+      }
+      if(!metaByOB[ob]) metaByOB[ob] = {factory, site, logistics, rowIndex: idx, sheetName: sourceSheetByRow[idx]};
+      else {
+        const old = metaByOB[ob];
+        if(old.factory !== factory || old.site !== site || old.logistics !== logistics) conflictOB.add(ob);
+      }
+      if(!factoryRows[factory]) factoryRows[factory] = [];
+      factoryRows[factory].push(row);
+    });
+    const sheetSiteInfo = sheetBlocks.map(b => `${b.sheetName}${b.siteOverride ? '=' + b.siteOverride : '=表内/空'}`).join('；');
+    log(`发货清单读取完成：读取 ${sheetBlocks.length} 个工作表，共 ${dataRows.length} 行，${Object.keys(factoryRows).length} 个工厂，站点拆分：${hasSite ? '启用' : '未启用'}。Sheet站点设置：${sheetSiteInfo}。同一OB多SKU会正常保留并一起回填外箱贴。`,'ok');
+
+    log('开始读取资料压缩包...');
+    const zipBuf = await readFileAsArrayBuffer(zipf);
+    const srcZip = await JSZip.loadAsync(zipBuf, {decodeFileName: decodeZipFileName});
+    const errors = [];
+    conflictOB.forEach(ob => errors.push({type:'同OB归类信息冲突', key:ob, msg:'同一个出库单号对应了不同工厂/站点/物流，会按首次出现的归类信息整理，请人工确认'}));
+
+    const asnMap = {};
+    const obFolderNameByOB = {}, targetPartsByOB = {};
+    const classifiedFolders = new Set();
+    const seenFileOB = new Set();
+    const entries = Object.values(srcZip.files).filter(e=>!e.dir);
+    log(`压缩包读取完成：共 ${entries.length} 个文件。已启用中文文件名解码与OB上下文安全匹配。开始逐个写入输出文件夹。`,'ok');
+
+    let done = 0;
+    for(const entry of entries){
+      const path = entry.name.replace(/\\/g,'/');
+      const parts = path.split('/').filter(Boolean);
+      const fileName = parts[parts.length-1] || '';
+      const ob = getOB(path);
+      done++;
+      if(done === 1 || done % 10 === 0 || done === entries.length) setProgress(done, entries.length, '正在整理资料文件');
+      if(!ob) {
+        const fk = fileMatchKey(fileName);
+        if(referencedExtraNames.has(fk) || Array.from(referencedExtraNames).some(k => fk.includes(k) || k.includes(fk))) { continue; }
+        errors.push({type:'文件未识别OB', key:path, msg:'文件路径或文件名中未找到 OB+数字，也没有被货代箱唛/入仓单列引用'}); continue;
+      }
+      seenFileOB.add(ob);
+      const meta = metaByOB[ob];
+      if(!meta){ errors.push({type:'文件OB未匹配表格', key:ob, msg:path}); continue; }
+
+      if(!opts.keepPacking && isPackingListFile(fileName)){
+        log(`已跳过原始装箱清单：${path}`, 'warn');
+        continue;
+      }
+
+      if(/\.pdf$/i.test(fileName) && /^ASN/i.test(fileName)){
+        const asn = getAsnPrefix(fileName, ob);
+        if(asn) uniquePush(asnMap, ob, asn);
+      }
+
+      const obFolderName = getTopOBFolderName(parts, ob);
+      const innerParts = getInnerParts(parts, ob, fileName);
+      const targetParts = [cleanName(meta.factory)];
+      if(hasSite) targetParts.push(cleanName(meta.site));
+      targetParts.push(cleanName(meta.logistics), cleanName(obFolderName));
+      if(!obFolderNameByOB[ob]) obFolderNameByOB[ob] = cleanName(obFolderName);
+      if(!targetPartsByOB[ob]) targetPartsByOB[ob] = targetParts.slice();
+      const outParts = targetParts.concat(innerParts.map(cleanName));
+      const bytes = await entry.async('uint8array');
+      await writeFile(outRoot, outParts, bytes);
+      classifiedFolders.add(targetParts.join('/'));
+    }
+
+    let asnFillCount = 0;
+    Object.entries(asnMap).forEach(([ob, set]) => {
+      const rows = rowListByOB[ob];
+      if(rows && rows.length){ rows.forEach(row => row[colAsn] = Array.from(set).join(';')); asnFillCount += rows.length; }
+    });
+
+    log('开始复制货代箱唛 / 入仓单补充资料...');
+    let extraCopied = 0;
+    async function copyExtraFilesForOB(ob, fileSet, folderName, typeName){
+      if(!fileSet || !fileSet.size) return;
+      const meta = metaByOB[ob];
+      if(!meta){ errors.push({type:`${typeName}未匹配表格OB`, key:ob, msg:'表格没有该OB归类信息'}); return; }
+      let baseParts = targetPartsByOB[ob];
+      if(!baseParts){
+        const obFolderName = obFolderNameByOB[ob] || `${ob}_资料`;
+        baseParts = [cleanName(meta.factory)];
+        if(hasSite) baseParts.push(cleanName(meta.site));
+        baseParts.push(cleanName(meta.logistics), cleanName(obFolderName));
+        targetPartsByOB[ob] = baseParts;
+      }
+      for(const requested of fileSet){
+        const found = findZipEntryByRequestedName(requested, entries, ob);
+        if(!found.entry){ errors.push({type:`${typeName}文件未找到`, key:ob, msg:`表格填写：${requested}；${found.reason}`}); continue; }
+        if(found.reason && found.reason !== '精确匹配'){
+          log(`${typeName}智能匹配：表格填写「${requested}」→ 实际文件「${baseName(found.entry.name)}」（${found.reason}）`, 'warn');
+        }
+        const rawName = baseName(found.entry.name);
+        const targetName = opts.flatLogistics ? cleanName(prefixLogisticsFileName(typeName, rawName)) : cleanName(rawName);
+        const bytes = await found.entry.async('uint8array');
+        const targetPath = opts.flatLogistics ? baseParts.concat([targetName]) : baseParts.concat([folderName, targetName]);
+        await writeFile(outRoot, targetPath, bytes);
+        extraCopied++;
+      }
+    }
+    const extraObs = Array.from(new Set([...Object.keys(freightMarkByOB), ...Object.keys(inboundByOB)]));
+    let extraDone = 0;
+    for(const ob of extraObs){
+      extraDone++;
+      if(extraDone === 1 || extraDone % 10 === 0 || extraDone === extraObs.length) setProgress(extraDone, extraObs.length || 1, '正在复制物流补充资料');
+      await copyExtraFilesForOB(ob, freightMarkByOB[ob], '货代箱唛', '货代箱唛');
+      await copyExtraFilesForOB(ob, inboundByOB[ob], '入仓单', '入仓单');
+    }
+    log(`物流补充资料复制完成：共复制 ${extraCopied} 份。`, extraCopied ? 'ok' : 'warn');
+
+    Object.keys(rowListByOB).forEach(ob => {
+      if(!seenFileOB.has(ob)) errors.push({type:'表格OB未找到资料', key:ob, msg:'压缩包内未发现该OB对应文件或文件夹'});
+      if(!asnMap[ob]) errors.push({type:'未找到外箱贴PDF', key:ob, msg:'未发现 ASNxxxx_OBxxxx.pdf，未回填三方仓外箱贴'});
+    });
+
+    log('开始生成各工厂发货明细表...');
+    let i = 0;
+    const factoryEntries = Object.entries(factoryRows);
+    for(const [factory, rows] of factoryEntries){
+      i++;
+      setProgress(i, factoryEntries.length, '正在生成工厂发货明细');
+      const cleanTable = stripColumnsFromRows(headers, rows, auxOutputCols);
+      const factoryWb = makeWorkbookFromRows('发货明细', [cleanTable.headers, ...cleanTable.rows]);
+      await writeFile(outRoot, [cleanName(factory), `发货明细_${cleanName(factory)}.xlsx`], workbookToBytes(factoryWb));
+    }
+    const allCleanTable = stripColumnsFromRows(headers, dataRows, auxOutputCols);
+    const allWb = makeWorkbookFromRows('发货明细_已回填', [allCleanTable.headers, ...allCleanTable.rows]);
+    await writeFile(outRoot, ['发货清单_全量已回填.xlsx'], workbookToBytes(allWb));
+
+    if(opts.exportErrors){
+      const errHeaders = ['类型','OB单号/文件','说明'];
+      const errRows = errors.map(e=>[e.type,e.key,e.msg]);
+      const errWb = makeWorkbookFromRows('异常报告', [errHeaders, ...errRows]);
+      await writeFile(outRoot, ['异常报告.xlsx'], workbookToBytes(errWb));
+    } else {
+      log('已按设置跳过异常报告.xlsx导出；页面仍保留异常预览。', 'warn');
+    }
+    setProgress(1, 1, '整理完成');
+
+    $('kRows').textContent = dataRows.length;
+    $('kFactories').textContent = Object.keys(factoryRows).length;
+    $('kFolders').textContent = classifiedFolders.size;
+    $('kAsn').textContent = asnFillCount;
+    $('kErr').textContent = errors.length;
+    $('errBox').innerHTML = htmlTable(errors);
+    $('resultCard').classList.remove('hide');
+    $('previewCard').classList.remove('hide');
+    log(`整理完成：已直接写入本地输出文件夹。归类OB文件夹 ${classifiedFolders.size} 个，回填外箱贴 ${asnFillCount} 条，复制物流补充资料 ${extraCopied} 份，业务异常 ${errors.length} 条。`,'ok');
+    alert('整理完成：请到你刚刚选择的输出位置查看“发货文件_整理结果_' + stamp + '”文件夹。');
+  }catch(err){
+    console.error(err);
+    if(err && err.name === 'AbortError') log('已取消选择输出文件夹，未执行整理。','warn');
+    else { log('执行失败：' + err.message, 'bad'); alert('执行失败：' + err.message); }
+  }finally{
+    $('runBtn').disabled = false;
+  }
+};
+</script>
+</body>
+</html>
