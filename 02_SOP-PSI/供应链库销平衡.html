@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>供应链 S&OP / PSI 测算系统 v21.16.2 本月延期口径收口版</title>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+<title>供应链库销平衡系统</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
 
 /* ===== V21.3 Final 预测变动监控空白列清理 ===== */
 function __v213_fixForecastRevisionLayout(){
@@ -482,6 +483,1077 @@ th.productNameCol{font-weight:900!important;}
 @media(max-width:1500px){#deliveryKpis.deliveryKpis{grid-template-columns:repeat(4,minmax(160px,1fr))!important;}}
 @media(max-width:820px){#deliveryKpis.deliveryKpis{grid-template-columns:repeat(2,minmax(140px,1fr))!important;}}
 
+
+/* productized visual polish */
+.heroHead .brand h1{font-size:28px!important;letter-spacing:.8px!important;}
+.heroHead .sub{max-width:900px!important;line-height:1.7!important;}
+.heroHead{align-items:center!important;}
+.help{color:var(--neo-accent,#f2a33a)!important;}
+
+
+
+/* ===== V3.2 预测驾驶舱布局优化：四宫格KPI + 站点准确率，不改计算逻辑 ===== */
+.forecastCockpitSection{
+  padding:22px 24px!important;
+}
+.forecastCockpitGrid{
+  display:grid!important;
+  grid-template-columns:minmax(360px,0.82fr) minmax(520px,1.18fr)!important;
+  gap:18px!important;
+  align-items:stretch!important;
+  margin-top:14px!important;
+}
+.forecastKpiPanel{
+  border:1px solid var(--line)!important;
+  border-radius:18px!important;
+  background:var(--card)!important;
+  padding:16px!important;
+  box-shadow:var(--shadow)!important;
+  min-width:0!important;
+}
+#forecastKpis.forecastKpiGrid,
+.forecastKpiGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi{
+  min-height:112px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  background:var(--kpi)!important;
+  border:1px solid var(--kpi-border)!important;
+  box-shadow:0 4px 12px rgba(88,65,32,.045)!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span{
+  color:var(--text-soft)!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b{
+  color:var(--accent-dark)!important;
+  font-size:26px!important;
+  line-height:1.15!important;
+}
+.forecastSitePanel{
+  min-width:0!important;
+  padding:16px!important;
+}
+.forecastSitePanel .miniTable,
+.forecastDetailGrid .miniTable{
+  max-height:360px!important;
+}
+.forecastDetailGrid{
+  margin-top:18px!important;
+  grid-template-columns:1fr 1fr!important;
+}
+.forecastDetailGrid .chartCard{
+  min-width:0!important;
+}
+@media(max-width:1200px){
+  .forecastCockpitGrid{grid-template-columns:1fr!important;}
+  #forecastKpis.forecastKpiGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  .forecastDetailGrid{grid-template-columns:1fr!important;}
+}
+@media(max-width:640px){
+  #forecastKpis.forecastKpiGrid{grid-template-columns:1fr!important;}
+}
+
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+
+
+<style id="soft-product-polish-v2">
+/* ===== 产品化UI优化：柔和同色系过渡 + 上传中心筛选与按钮布局，不改任何计算逻辑 ===== */
+:root{
+  --bg:#f4f0e8!important;
+  --card:#fbf8f1!important;
+  --panel:#fbf8f1!important;
+  --line:#e8dfd1!important;
+  --line2:#f0e8dc!important;
+  --text:#2f2f34!important;
+  --muted:#7b746b!important;
+  --blue:#1f4f92!important;
+  --blue2:#eef3fb!important;
+  --orange:#eda636!important;
+  --amber:#ba7a18!important;
+  --head:#f6efe4!important;
+  --shadow:12px 16px 34px rgba(112,91,61,.10), -8px -8px 22px rgba(255,255,255,.82)!important;
+}
+html,body{
+  background:
+    radial-gradient(circle at 8% 6%, rgba(255,255,255,.92) 0, rgba(255,255,255,0) 32%),
+    radial-gradient(circle at 88% 10%, rgba(247,205,132,.16) 0, rgba(247,205,132,0) 34%),
+    linear-gradient(180deg,#f7f2e9 0%,#f1ece3 52%,#eee9e0 100%)!important;
+  color:var(--text)!important;
+}
+.wrap{
+  max-width:1680px!important;
+  padding:22px 28px!important;
+}
+.hero,.panel,.forecastSection,.deliverySection,.chartCard,.deliveryCard,.dashCard,.dashSide,.impactCard,.coverageCard,.supplyBox,.ageStackItem,.ageCard,.kpi{
+  background:linear-gradient(145deg,#fcf9f2 0%,#f4efe6 100%)!important;
+  border-color:rgba(232,223,209,.92)!important;
+  box-shadow:12px 16px 32px rgba(112,91,61,.095), -8px -8px 22px rgba(255,255,255,.72)!important;
+}
+.hero{
+  border-radius:26px!important;
+  overflow:hidden!important;
+}
+.heroHead{
+  background:linear-gradient(180deg,rgba(255,252,246,.72),rgba(247,242,234,.18))!important;
+}
+.safeBar{
+  background:linear-gradient(90deg,#f9f6ef 0%,#f2ede4 100%)!important;
+  border-top:1px solid rgba(232,223,209,.9)!important;
+}
+.tablebox,.deliveryChartBox,.trendSvgWrap,.riskMatrix{
+  background:linear-gradient(145deg,#fcfaf5,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  box-shadow:inset 4px 4px 10px rgba(112,91,61,.04), inset -4px -4px 12px rgba(255,255,255,.72)!important;
+}
+th,.miniTable th,.ratioMatrix th,.ageStackTable th{
+  background:#f1e7d8!important;
+  color:#554632!important;
+}
+td,.miniTable td{
+  background:rgba(255,252,246,.62)!important;
+}
+input,select,.supplierComboBtn{
+  background:linear-gradient(145deg,#fbf7ef,#f2ece2)!important;
+  border-color:#e0d4c3!important;
+  border-radius:16px!important;
+  box-shadow:inset 3px 3px 8px rgba(112,91,61,.06), inset -4px -4px 10px rgba(255,255,255,.86)!important;
+}
+button,.ghost,.dangerGhost,.chooseBtn,.tab,.subTab,.segBtn,.coverageBtn,.agingFilterBtn{
+  border-radius:16px!important;
+  border-color:#e0d4c3!important;
+  box-shadow:7px 9px 18px rgba(112,91,61,.09), -5px -5px 14px rgba(255,255,255,.72)!important;
+}
+.runBtn{
+  background:linear-gradient(135deg,#ffd27b 0%,#f2a93b 100%)!important;
+  border-color:#efad49!important;
+  color:#fff!important;
+  box-shadow:10px 14px 24px rgba(206,137,37,.24), -6px -6px 16px rgba(255,255,255,.76)!important;
+}
+.ghost{
+  color:#d88400!important;
+  background:linear-gradient(145deg,#fffaf2,#f4eee4)!important;
+}
+.dangerGhost{
+  color:#d88400!important;
+  background:linear-gradient(145deg,#fffaf2,#f4eee4)!important;
+  border-color:#ead9bd!important;
+}
+.tab.active,.subTab.active,.segBtn.active,.coverageBtn.active,.agingFilterBtn.active{
+  background:linear-gradient(135deg,#f7bd57,#ee9f28)!important;
+  border-color:#efad49!important;
+  color:#fff!important;
+}
+.kpis,.deliveryKpis{
+  justify-content:center!important;
+}
+.kpi{
+  min-height:108px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.kpi b,.dashCard b,.impactCard b,.coverageCard b{
+  color:#2f2f34!important;
+}
+.kpi span,.dashCard span,.impactCard span,.coverageCard span,.field label{
+  color:#7b746b!important;
+}
+.chartCard,.deliveryCard{
+  border-radius:24px!important;
+}
+.forecastSection,.deliverySection,.panel{
+  border-radius:26px!important;
+}
+.globalFilters{
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  box-shadow:12px 16px 32px rgba(112,91,61,.095), -8px -8px 22px rgba(255,255,255,.72)!important;
+}
+
+/* 上传中心：第一排放满7个筛选项，第二排右侧放开始计算/导出/重置 */
+.controlRow{
+  display:grid!important;
+  grid-template-columns:1fr auto auto auto auto!important;
+  grid-template-rows:auto auto!important;
+  gap:16px 14px!important;
+  align-items:center!important;
+  padding:0 28px 22px!important;
+}
+.controlPanel{
+  grid-column:1 / -1!important;
+  grid-row:1!important;
+  display:grid!important;
+  grid-template-columns:repeat(7,minmax(132px,1fr))!important;
+  gap:14px!important;
+  align-items:end!important;
+  padding:16px 18px!important;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border:1px solid #e8dfd1!important;
+  box-shadow:inset 4px 4px 10px rgba(112,91,61,.035), inset -4px -4px 12px rgba(255,255,255,.76)!important;
+}
+.controlPanel .field{
+  min-width:0!important;
+}
+.controlPanel .field label{
+  white-space:nowrap!important;
+}
+.controlPanel input,.controlPanel select{
+  width:100%!important;
+  height:44px!important;
+}
+#orderThreshold{
+  min-width:0!important;
+}
+#run.runBtn{
+  grid-column:2!important;
+  grid-row:2!important;
+  height:56px!important;
+  min-width:188px!important;
+  padding:0 28px!important;
+  font-size:20px!important;
+  align-self:center!important;
+}
+#exportWide{
+  grid-column:3!important;
+  grid-row:2!important;
+  height:42px!important;
+  min-width:96px!important;
+  align-self:center!important;
+}
+#exportSnapshot{
+  grid-column:4!important;
+  grid-row:2!important;
+  height:42px!important;
+  min-width:132px!important;
+  align-self:center!important;
+}
+#resetBtn{
+  grid-column:5!important;
+  grid-row:2!important;
+  height:42px!important;
+  min-width:88px!important;
+  align-self:center!important;
+}
+.forecastUploadBox{
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  border-radius:26px!important;
+  box-shadow:12px 16px 32px rgba(112,91,61,.095), -8px -8px 22px rgba(255,255,255,.72)!important;
+}
+.forecastFileCard,.stepCard,.completeUpload{
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  box-shadow:10px 14px 28px rgba(112,91,61,.08), -7px -7px 20px rgba(255,255,255,.76)!important;
+}
+.forecastFileCard:hover,.stepCard:hover,.stepCard.loaded,.forecastFileCard.loaded{
+  border-color:#efb65c!important;
+  box-shadow:12px 18px 32px rgba(206,137,37,.13), -8px -8px 22px rgba(255,255,255,.78)!important;
+}
+
+/* 经营页与上传页保持同色系，减少卡片/底色断层感 */
+body:has(.appShell), .appShell, .mainContent, .content, main{
+  background:transparent!important;
+}
+.productShell,.appShell{
+  background:linear-gradient(180deg,#f7f2e9 0%,#eee9e0 100%)!important;
+}
+.sidebar,.leftNav,.productSidebar{
+  background:linear-gradient(180deg,#f7f2e9 0%,#eee9e0 100%)!important;
+  border-color:#e8dfd1!important;
+}
+.navItem.active,.navItem:hover{
+  background:linear-gradient(145deg,#fff9ef,#f2eadf)!important;
+  color:#d88400!important;
+  box-shadow:8px 10px 20px rgba(112,91,61,.08), -5px -5px 14px rgba(255,255,255,.72)!important;
+}
+
+@media(max-width:1400px){
+  .controlPanel{
+    grid-template-columns:repeat(4,minmax(132px,1fr))!important;
+  }
+}
+@media(max-width:1200px){
+  .controlRow{
+    grid-template-columns:1fr!important;
+  }
+  .controlPanel{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  #run.runBtn,#exportWide,#exportSnapshot,#resetBtn{
+    grid-column:1!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #run.runBtn{grid-row:2!important;}
+  #exportWide{grid-row:3!important;}
+  #exportSnapshot{grid-row:4!important;}
+  #resetBtn{grid-row:5!important;}
+}
+@media(max-width:720px){
+  .wrap{padding:16px!important;}
+  .controlPanel{
+    grid-template-columns:1fr!important;
+  }
+}
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+
+
+
+<style id="v33-spacing-polish">
+/* ===== V3.3 间距细节优化：统一 8pt Grid 留白，只调整布局与视觉，不改计算逻辑 ===== */
+:root{
+  --ui-space-page:24px;
+  --ui-space-card:16px;
+  --ui-space-inner:20px;
+  --ui-space-section:24px;
+  --ui-soft-shadow:0 5px 14px rgba(88,65,32,.045);
+}
+
+/* 顶部固定 KPI：外框内保留呼吸空间，避免卡片贴边 */
+#kpis.fixedKpis,
+.fixedKpis#kpis{
+  padding:24px 28px!important;
+  gap:16px!important;
+  border-radius:22px!important;
+  box-sizing:border-box!important;
+  margin:0 0 24px 0!important;
+}
+#kpis.fixedKpis .kpi,
+.fixedKpis#kpis .kpi{
+  min-height:104px!important;
+  border-radius:18px!important;
+  box-shadow:var(--ui-soft-shadow)!important;
+}
+
+/* 一级面板统一内边距 */
+.panel{
+  padding:24px!important;
+  border-radius:22px!important;
+}
+.panel > .sopActions:first-child,
+.panel > .forecastSection:first-child,
+.panel > .deliverySection:first-child{
+  margin-top:0!important;
+}
+
+/* 预测质量模块：标题区、驾驶舱区与外框线保持安全间距 */
+#forecastPanel{
+  padding:24px!important;
+}
+#forecastPanel .sopActions{
+  margin:0 0 20px 0!important;
+  padding:18px 20px!important;
+  border-radius:20px!important;
+}
+#forecastPanel .forecastSection,
+.forecastCockpitSection{
+  padding:24px!important;
+  border-radius:22px!important;
+  overflow:hidden!important;
+}
+#forecastPanel .forecastSectionTitle{
+  margin-bottom:10px!important;
+}
+#forecastPanel .compactDesc,
+.forecastCockpitSection .compactDesc{
+  margin-bottom:18px!important;
+}
+
+/* 预测驾驶舱：左右与上下全部内缩，不再贴外框 */
+.forecastCockpitGrid{
+  gap:24px!important;
+  padding:10px 14px 12px!important;
+  margin-top:14px!important;
+  box-sizing:border-box!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  padding:8px!important;
+  box-sizing:border-box!important;
+}
+#forecastKpis.forecastKpiGrid,
+.forecastKpiGrid{
+  gap:16px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  min-height:112px!important;
+  border-radius:18px!important;
+  box-shadow:var(--ui-soft-shadow)!important;
+}
+.forecastSitePanel{
+  padding:20px!important;
+  border-radius:18px!important;
+  box-sizing:border-box!important;
+}
+
+/* 预测下方两列卡片：统一与驾驶舱的节奏 */
+.forecastDetailGrid{
+  gap:24px!important;
+  margin-top:22px!important;
+  padding:0 14px 6px!important;
+  box-sizing:border-box!important;
+}
+.forecastDetailGrid .chartCard,
+#forecastPanel .chartCard{
+  padding:20px!important;
+  border-radius:18px!important;
+  box-shadow:var(--ui-soft-shadow)!important;
+}
+
+/* 表格 / 条形容器内边距，避免内容贴线 */
+.tablebox,
+.miniTable,
+.deliveryChartBox,
+.trendSvgWrap,
+.riskMatrix{
+  border-radius:16px!important;
+}
+
+/* 响应式时也保留边距 */
+@media(max-width:1200px){
+  #kpis.fixedKpis,.fixedKpis#kpis{padding:20px!important;}
+  #forecastPanel{padding:18px!important;}
+  .forecastCockpitGrid{padding:8px!important;gap:18px!important;}
+  .forecastDetailGrid{padding:0 8px 6px!important;gap:18px!important;}
+}
+@media(max-width:720px){
+  #kpis.fixedKpis,.fixedKpis#kpis{padding:16px!important;gap:12px!important;}
+  #forecastPanel{padding:14px!important;}
+  #forecastPanel .forecastSection,.forecastCockpitSection{padding:16px!important;}
+  .forecastCockpitGrid{padding:4px!important;}
+}
+</style>
+
+
+
+<!-- ===== V3.4 预测驾驶舱一步到位布局优化：仅样式，不改计算逻辑 ===== -->
+<style id="v34ForecastCockpitPolish">
+/* 预测驾驶舱整体：让它成为一个完整的左右仪表盘，而不是四张卡硬塞 */
+#forecastPanel .forecastCockpitSection{
+  padding:24px 26px 26px!important;
+  border-radius:24px!important;
+  overflow:hidden!important;
+  background:#FFFDFC!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 6px 18px rgba(88,65,32,.05)!important;
+}
+#forecastPanel .forecastCockpitSection .forecastSectionTitle{
+  margin:0 0 8px!important;
+}
+#forecastPanel .forecastCockpitSection .compactDesc{
+  margin:0 0 18px!important;
+  color:#7B6A57!important;
+  line-height:1.6!important;
+}
+
+/* 主驾驶舱：统一浅底容器 + 24px 间距 */
+#forecastPanel .forecastCockpitGrid{
+  display:grid!important;
+  grid-template-columns:minmax(420px,.92fr) minmax(560px,1.28fr)!important;
+  gap:24px!important;
+  padding:18px!important;
+  margin:0!important;
+  border-radius:22px!important;
+  background:#FFF8EA!important;
+  border:1px solid #EAD8B8!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65)!important;
+  align-items:stretch!important;
+  box-sizing:border-box!important;
+}
+
+/* 左侧四宫格外壳：留出呼吸感，避免贴边 */
+#forecastPanel .forecastCockpitGrid .forecastKpiPanel{
+  min-width:0!important;
+  height:100%!important;
+  padding:18px!important;
+  border-radius:20px!important;
+  background:#FFFDFC!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 4px 12px rgba(88,65,32,.035)!important;
+  box-sizing:border-box!important;
+}
+
+/* 四宫格：尺寸统一、间距统一 */
+#forecastPanel #forecastKpis.forecastKpiGrid,
+#forecastPanel .forecastKpiGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+  width:100%!important;
+  height:100%!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#forecastPanel #forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+#forecastPanel .forecastSection #forecastKpis .kpi{
+  width:100%!important;
+  min-width:0!important;
+  min-height:118px!important;
+  margin:0!important;
+  padding:18px 14px!important;
+  border-radius:18px!important;
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 4px 10px rgba(88,65,32,.04)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+}
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1.35!important;
+  margin:0 0 8px!important;
+}
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-size:25px!important;
+  font-weight:900!important;
+  line-height:1.18!important;
+  letter-spacing:.2px!important;
+  margin:0!important;
+}
+
+/* 右侧站点准确率：与左侧等高、同一主题 */
+#forecastPanel .forecastSitePanel{
+  min-width:0!important;
+  height:100%!important;
+  padding:20px!important;
+  border-radius:20px!important;
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 4px 12px rgba(88,65,32,.035)!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+#forecastPanel .forecastSitePanel .dashTitle{
+  margin:0 0 14px!important;
+  color:#7A4A10!important;
+  font-size:17px!important;
+}
+#forecastPanel .forecastSitePanel .tablebox{
+  flex:1 1 auto!important;
+  min-height:220px!important;
+  max-height:320px!important;
+  border-radius:16px!important;
+  background:#FFF8EA!important;
+  border:1px solid #EAD8B8!important;
+  overflow:auto!important;
+}
+
+/* 细节区与驾驶舱保持节奏一致 */
+#forecastPanel .forecastDetailGrid{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:24px!important;
+  margin-top:24px!important;
+  padding:0!important;
+}
+#forecastPanel .forecastDetailGrid .chartCard{
+  border-radius:20px!important;
+  padding:20px!important;
+  background:#FFFDFC!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 4px 12px rgba(88,65,32,.035)!important;
+}
+
+/* 防止历史补丁造成白边/贴边 */
+#forecastPanel .forecastCockpitGrid *,
+#forecastPanel .forecastDetailGrid *{
+  box-sizing:border-box!important;
+}
+
+@media(max-width:1280px){
+  #forecastPanel .forecastCockpitGrid{
+    grid-template-columns:1fr!important;
+  }
+  #forecastPanel .forecastSitePanel .tablebox{
+    min-height:200px!important;
+  }
+}
+@media(max-width:760px){
+  #forecastPanel .forecastCockpitSection{
+    padding:16px!important;
+  }
+  #forecastPanel .forecastCockpitGrid{
+    padding:12px!important;
+    gap:16px!important;
+  }
+  #forecastPanel #forecastKpis.forecastKpiGrid{
+    grid-template-columns:1fr!important;
+  }
+  #forecastPanel .forecastDetailGrid{
+    grid-template-columns:1fr!important;
+    gap:16px!important;
+  }
+}
+</style>
+
+
+<!-- ===== V3.5 预测驾驶舱精修：只重排视觉层，不改任何计算/数据逻辑 ===== -->
+<style id="v35ForecastCockpitRefine">
+/* 预测驾驶舱：改成真正的模块化驾驶舱，去掉硬塞感 */
+#forecastPanel .forecastCockpitSection{
+  padding:24px 24px 26px!important;
+  margin-top:18px!important;
+  border-radius:22px!important;
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 4px 14px rgba(88,65,32,.045)!important;
+  overflow:hidden!important;
+}
+#forecastPanel .forecastCockpitSection .forecastSectionTitle{
+  margin:0 0 8px!important;
+  color:#7A4A10!important;
+}
+#forecastPanel .forecastCockpitSection .compactDesc{
+  margin:0 0 18px!important;
+  color:#7B6A57!important;
+  line-height:1.55!important;
+}
+
+/* 主体左右两栏：取消大色块外壳，只保留清晰模块卡片 */
+#forecastPanel .forecastCockpitGrid{
+  display:grid!important;
+  grid-template-columns:minmax(420px,.86fr) minmax(520px,1.14fr)!important;
+  gap:20px!important;
+  padding:0!important;
+  margin:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  align-items:stretch!important;
+}
+
+/* 左侧核心指标容器 */
+#forecastPanel .forecastKpiPanel{
+  min-width:0!important;
+  padding:18px!important;
+  border-radius:20px!important;
+  background:#FFF8EA!important;
+  background-image:none!important;
+  border:1px solid #EAD8B8!important;
+  box-shadow:0 3px 10px rgba(88,65,32,.035)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  box-sizing:border-box!important;
+}
+#forecastPanel .forecastKpiPanel::before{
+  content:'核心预测指标';
+  display:block;
+  margin:0 0 14px;
+  color:#7A4A10;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.2px;
+}
+#forecastPanel #forecastKpis.forecastKpiGrid,
+#forecastPanel .forecastKpiGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:14px!important;
+  width:100%!important;
+  height:auto!important;
+  padding:0!important;
+  align-content:stretch!important;
+}
+#forecastPanel #forecastKpis .kpi,
+#forecastPanel #forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel .forecastSection #forecastKpis .kpi{
+  min-width:0!important;
+  min-height:104px!important;
+  padding:16px 14px!important;
+  margin:0!important;
+  border-radius:17px!important;
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D2A8!important;
+  box-shadow:0 2px 7px rgba(88,65,32,.035)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+}
+#forecastPanel #forecastKpis .kpi span{
+  margin:0 0 8px!important;
+  color:#6E5B46!important;
+  font-size:12px!important;
+  font-weight:850!important;
+  line-height:1.35!important;
+}
+#forecastPanel #forecastKpis .kpi b{
+  margin:0!important;
+  color:#8F540B!important;
+  font-size:24px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+  letter-spacing:.15px!important;
+}
+
+/* 右侧站点准确率容器 */
+#forecastPanel .forecastSitePanel{
+  min-width:0!important;
+  padding:18px!important;
+  border-radius:20px!important;
+  background:#FFF8EA!important;
+  background-image:none!important;
+  border:1px solid #EAD8B8!important;
+  box-shadow:0 3px 10px rgba(88,65,32,.035)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  box-sizing:border-box!important;
+}
+#forecastPanel .forecastSitePanel .dashTitle{
+  margin:0 0 14px!important;
+  color:#7A4A10!important;
+  font-size:16px!important;
+  font-weight:900!important;
+}
+#forecastPanel .forecastSitePanel .tablebox{
+  flex:1 1 auto!important;
+  min-height:232px!important;
+  max-height:300px!important;
+  padding:0!important;
+  border-radius:16px!important;
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)!important;
+  overflow:auto!important;
+}
+#forecastPanel .forecastSitePanel table,
+#forecastPanel .forecastDetailGrid table{
+  background:#FFFDFC!important;
+}
+
+/* 下方两张明细卡：与上方同一节奏，不再贴边 */
+#forecastPanel .forecastDetailGrid{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:20px!important;
+  margin-top:20px!important;
+  padding:0!important;
+}
+#forecastPanel .forecastDetailGrid .chartCard{
+  padding:18px!important;
+  border-radius:20px!important;
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 3px 10px rgba(88,65,32,.035)!important;
+}
+#forecastPanel .forecastDetailGrid .dashTitle{
+  margin:0 0 14px!important;
+  color:#7A4A10!important;
+  font-size:16px!important;
+  font-weight:900!important;
+}
+#forecastPanel .forecastDetailGrid .tablebox{
+  min-height:64px!important;
+  border-radius:16px!important;
+  background:#FFF8EA!important;
+  background-image:none!important;
+  border:1px solid #EAD8B8!important;
+  box-shadow:none!important;
+}
+
+/* 空表格/无数据条更柔和 */
+#forecastPanel .forecastSitePanel th,
+#forecastPanel .forecastSitePanel td,
+#forecastPanel .forecastDetailGrid th,
+#forecastPanel .forecastDetailGrid td{
+  background:#FFFDFC!important;
+  border-color:#EFE2CC!important;
+}
+#forecastPanel .forecastSitePanel .tablebox:empty,
+#forecastPanel .forecastDetailGrid .tablebox:empty{
+  background:#FFF8EA!important;
+}
+
+@media(max-width:1180px){
+  #forecastPanel .forecastCockpitGrid,
+  #forecastPanel .forecastDetailGrid{grid-template-columns:1fr!important;}
+  #forecastPanel .forecastSitePanel .tablebox{min-height:180px!important;}
+}
+@media(max-width:720px){
+  #forecastPanel .forecastCockpitSection{padding:18px!important;}
+  #forecastPanel .forecastKpiPanel,
+  #forecastPanel .forecastSitePanel,
+  #forecastPanel .forecastDetailGrid .chartCard{padding:14px!important;}
+  #forecastPanel #forecastKpis.forecastKpiGrid{grid-template-columns:1fr!important;}
+}
+</style>
+
+
+
+<!-- ===== V3.6 预测驾驶舱对齐优化：只调整布局与视觉，不改计算逻辑 ===== -->
+<style id="v36ForecastCockpitAlignment">
+/* 统一预测驾驶舱上下两行的列宽、间距和卡片边界，避免错位感 */
+#forecastPanel .forecastCockpitSection{
+  padding:24px!important;
+  border-radius:22px!important;
+  overflow:hidden!important;
+}
+#forecastPanel .forecastCockpitSection .compactDesc{
+  margin-bottom:18px!important;
+}
+#forecastPanel .forecastCockpitGrid,
+#forecastPanel .forecastDetailGrid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.34fr)!important;
+  column-gap:24px!important;
+  row-gap:24px!important;
+  align-items:stretch!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+#forecastPanel .forecastCockpitGrid{
+  margin:0!important;
+  padding:0!important;
+}
+#forecastPanel .forecastDetailGrid{
+  margin:24px 0 0!important;
+  padding:0!important;
+}
+#forecastPanel .forecastKpiPanel,
+#forecastPanel .forecastSitePanel,
+#forecastPanel .forecastDetailGrid > .chartCard{
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  border-radius:18px!important;
+  border:1px solid #E6D6B8!important;
+  background:#FFFDFC!important;
+  background-image:none!important;
+  box-shadow:0 3px 10px rgba(88,65,32,.035)!important;
+  margin:0!important;
+}
+#forecastPanel .forecastKpiPanel,
+#forecastPanel .forecastSitePanel{
+  min-height:276px!important;
+  padding:20px!important;
+}
+#forecastPanel .forecastKpiPanel::before{
+  margin:0 0 14px!important;
+  height:22px!important;
+  line-height:22px!important;
+}
+#forecastPanel .forecastSitePanel .dashTitle,
+#forecastPanel .forecastDetailGrid .dashTitle{
+  margin:0 0 14px!important;
+  height:22px!important;
+  line-height:22px!important;
+  color:#7A4A10!important;
+}
+#forecastPanel #forecastKpis.forecastKpiGrid,
+#forecastPanel .forecastKpiGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+  height:calc(100% - 36px)!important;
+  align-content:stretch!important;
+}
+#forecastPanel #forecastKpis .kpi,
+#forecastPanel .forecastSection #forecastKpis .kpi{
+  min-height:0!important;
+  height:100%!important;
+  border-radius:16px!important;
+  background:#F6E6C8!important;
+  background-image:none!important;
+  box-shadow:0 2px 6px rgba(88,65,32,.03)!important;
+}
+#forecastPanel .forecastSitePanel .tablebox,
+#forecastPanel .forecastDetailGrid .tablebox{
+  width:100%!important;
+  height:calc(100% - 36px)!important;
+  min-height:162px!important;
+  max-height:none!important;
+  border-radius:14px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+#forecastPanel .forecastDetailGrid > .chartCard{
+  min-height:128px!important;
+  padding:20px!important;
+}
+#forecastPanel .forecastDetailGrid .tablebox{
+  min-height:48px!important;
+}
+@media(max-width:1100px){
+  #forecastPanel .forecastCockpitGrid,
+  #forecastPanel .forecastDetailGrid{
+    grid-template-columns:1fr!important;
+    gap:16px!important;
+  }
+  #forecastPanel .forecastCockpitGrid .forecastKpiPanel,
+  #forecastPanel .forecastCockpitGrid .forecastSitePanel{
+    min-height:auto!important;
+  }
+  #forecastPanel #forecastKpis.forecastKpiGrid,
+  #forecastPanel .forecastKpiGrid{
+    height:auto!important;
+  }
+  #forecastPanel #forecastKpis .kpi,
+  #forecastPanel .forecastSection #forecastKpis .kpi{
+    min-height:96px!important;
+  }
+}
 </style>
 
 </head>
@@ -492,7 +1564,7 @@ th.productNameCol{font-weight:900!important;}
     <div class="heroHead">
       <div class="brand">
         <div class="brandIcon">☁</div>
-        <div><h1>数据上传中心 v21.14-快照预测变动按钮修正版</h1><div class="sub">支持单个完整Excel或四个Sheet分别上传；可选Sheet5「SKU映射表」、Sheet6「补充库存」、Sheet7「26年已完结订单」。Sheet7用于供应商交付分析，不改变S&OP/PSI计算逻辑。</div></div>
+        <div><h1>数据上传中心</h1><div class="sub">上传供应链计划与业务数据，系统将自动完成库存、PSI、S&OP、预测质量及供应商交付分析。</div></div>
       </div>
       <div class="help">ⓘ 使用说明</div>
     </div>
@@ -517,7 +1589,7 @@ th.productNameCol{font-weight:900!important;}
     </div>
 
     <div class="completeUpload">
-      <div class="completeLeft"><div class="excelIcon">X</div><div><div class="completeTitle">上传单个完整Excel（4个Sheet+可选Sheet）</div><div class="completeDesc">系统将自动识别Sheet1~4；可选Sheet5映射、Sheet6补充库存、Sheet7已完结订单（用于供应商交付分析）</div></div></div>
+      <div class="completeLeft"><div class="excelIcon">X</div><div><div class="completeTitle">上传完整业务数据文件</div><div class="completeDesc">系统将自动识别库存、预测、采购、产品基础信息及可选分析数据</div></div></div>
       <div><label class="chooseBtn"><input id="file" type="file" accept=".xlsx,.xls" />⇧ 选择文件上传</label><div class="format">支持 .xlsx / .xls 格式</div></div>
     </div>
 
@@ -525,7 +1597,7 @@ th.productNameCol{font-weight:900!important;}
 
     <div class="forecastUploadBox">
       <div class="forecastUploadTitle">预测质量与库存归因数据（可选）</div>
-      <div class="forecastUploadDesc">不影响原S&OP计算逻辑。仅当同时上传「实际销量汇总」和「销量预估汇总」后，系统才展示预测质量/缺货冗余归因页面。</div>
+      <div class="forecastUploadDesc">上传实际销量与历史预测数据后，可查看预测质量、缺货风险与库存归因分析。</div>
       <div class="forecastUploadGrid">
         <label class="forecastFileCard" id="cardActual"><input id="fileActualSales" type="file" accept=".xlsx,.xls" />
           <div class="bigIcon">📊</div><div class="stepTitle">实际销量汇总</div><div class="stepDesc">宽表格式：业务员/站点/平台/SKU + 月份列</div><div class="uploadHint">⇧ 点击上传</div><div class="fileStatus" id="statusActual">未选择文件</div>
@@ -538,7 +1610,7 @@ th.productNameCol{font-weight:900!important;}
 
     <div class="controlRow">
       <div class="controlPanel">
-        <div class="field"><label>测算基准日期 <span style="color:#dc2626">*</span></label><input id="today" type="date" value="2026-06-02" required /></div>
+        <div class="field"><label>测算基准日期 <span style="color:#dc2626">*</span></label><input id="today" type="date" required /></div>
         <div class="field"><label>计算基准月</label><input id="startMonth" type="month" value="2026-06" readonly /></div>
         <div class="field"><label>站点筛选</label><select id="siteFilter"><option value="">全部</option></select></div>
         <div class="field"><label>业务员筛选</label><select id="ownerFilter"><option value="">全部</option></select></div>
@@ -609,18 +1681,25 @@ th.productNameCol{font-weight:900!important;}
 
 
   <div class="panel hide" id="forecastPanel">
-    <div class="sopActions"><div class="leftTitle">预测质量与库存归因<span>独立读取实际销量汇总与逐月销售预估版本；只做分析展示，不反写、不改变原S&OP/PSI计算逻辑。</span></div><div class="btns"><button class="buyBtn" id="exportForecastAnalysis" type="button">导出预测分析CSV</button></div></div>
+    <div class="sopActions"><div class="leftTitle">预测质量与库存归因<span>对比实际销量与销售预测，识别预测偏差、库存风险与供应链执行问题。</span></div><div class="btns"><button class="buyBtn" id="exportForecastAnalysis" type="button">导出预测分析CSV</button></div></div>
     <div class="dashNote">页面分为四部分：上方评价运营预测能力；中间监控预测持续上修/下修；下方解释库存形成原因；最后展示供应链执行诊断作为证据层。首月表头如 5.25-5.31、6.8-6.30 会自动按整月还原。</div>
-    <div class="kpis" id="forecastKpis"></div>
 
-    <section class="forecastSection">
-      <h3 class="forecastSectionTitle">一、运营预测能力<span class="infoIcon" data-tip="数据来源：实际销量汇总 + 销量预估汇总。&#10;比较逻辑：预测版本月份 + 3个月 VS 对应实际销量。&#10;WMAPE：Σ|实际-预测| ÷ Σ实际，越低越好。&#10;Bias：Σ(预测-实际) ÷ Σ实际；大于0表示高估，小于0表示低估。"></span></h3>
-      <p class="compactDesc">基于实际销量与历史预测版本计算，详细口径见标题旁说明。</p>
-      <div class="splitGrid">
-        <section class="chartCard"><h3 class="dashTitle">站点预测能力</h3><div class="tablebox miniTable"><table id="forecastSiteTable"></table></div></section>
-        <section class="chartCard"><h3 class="dashTitle">团队/业务员预测能力</h3><div class="tablebox miniTable"><table id="forecastTeamTable"></table></div></section>
+    <section class="forecastSection forecastCockpitSection">
+      <h3 class="forecastSectionTitle">一、运营预测驾驶舱<span class="infoIcon" data-tip="数据来源：实际销量汇总 + 销量预估汇总。&#10;比较逻辑：预测版本月份 + 3个月 VS 对应实际销量。&#10;WMAPE：Σ|实际-预测| ÷ Σ实际，越低越好。&#10;Bias：Σ(预测-实际) ÷ Σ实际；大于0表示高估，小于0表示低估。"></span></h3>
+      <p class="compactDesc">核心指标与站点准确率联动展示，快速定位预测表现与风险变化。</p>
+      <div class="forecastCockpitGrid">
+        <div class="forecastKpiPanel">
+          <div class="kpis forecastKpiGrid" id="forecastKpis"></div>
+        </div>
+        <section class="chartCard forecastSitePanel">
+          <h3 class="dashTitle">各站点预测准确率</h3>
+          <div class="tablebox miniTable"><table id="forecastSiteTable"></table></div>
+        </section>
       </div>
-      <section class="panel"><h3 class="dashTitle">SKU预测偏差 Top 30</h3><div class="tablebox miniTable"><table id="forecastSkuTable"></table></div></section>
+      <div class="splitGrid forecastDetailGrid">
+        <section class="chartCard"><h3 class="dashTitle">团队/业务员预测能力</h3><div class="tablebox miniTable"><table id="forecastTeamTable"></table></div></section>
+        <section class="chartCard"><h3 class="dashTitle">SKU预测偏差 Top 30</h3><div class="tablebox miniTable"><table id="forecastSkuTable"></table></div></section>
+      </div>
     </section>
 
     <section class="forecastSection">
@@ -2729,7 +3808,378 @@ function exportSnapshotHtml(){
 .supplyKpi b{color:#0f766e!important}.factorySupplyLayout{display:grid;grid-template-columns:1.05fr 1fr 1.25fr;gap:14px;align-items:stretch}.factoryStack{display:grid;grid-template-rows:auto auto;gap:14px}.supplyFormula{display:flex;align-items:center;justify-content:center;gap:10px;margin:12px 0 18px}.supplyBox{flex:1;min-width:0;border:1px solid #dbeafe;border-radius:12px;background:#fbfdff;padding:14px 10px;text-align:center}.supplyBox span{display:block;font-size:12px;color:#64748b;font-weight:900}.supplyBox b{display:block;font-size:24px;margin-top:7px;color:#172033}.supplyBox.orange{border-color:#fed7aa;background:#fff7ed}.supplyBox.orange b{color:#ea580c}.supplyBox.green{border-color:#bbf7d0;background:#ecfdf5}.supplyBox.green b{color:#047857}.supplyEq{font-size:20px;font-weight:900;color:#64748b}.supplyBarList{display:flex;flex-direction:column;gap:9px;margin-top:10px}.supplyBarRow{display:grid;grid-template-columns:minmax(120px,1fr) 1.6fr 70px;gap:10px;align-items:center;font-size:12px}.supplyBarName{font-weight:900;color:#172033;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.supplyTrack{height:18px;background:#eef2f7;border-radius:999px;overflow:hidden;display:flex}.supplyStock{height:100%;background:#2563eb}.supplyUnprod{height:100%;background:#f97316}.supplyTotal{text-align:right;font-weight:900}.coverageSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}.coverageCard{border:1px solid #dbeafe;border-radius:12px;background:#fbfdff;padding:12px;text-align:center}.coverageCard span{display:block;font-size:12px;color:#64748b;font-weight:900}.coverageCard b{display:block;font-size:21px;margin-top:6px;color:#172033}.coverageRateBig b{color:#047857}.coverageTable{max-height:360px!important}.coverageTag{display:inline-flex;padding:2px 8px;border-radius:999px;font-weight:900;border:1px solid #bbf7d0;background:#ecfdf5;color:#047857}.coverageTag.watch{background:#fffbeb;color:#b45309;border-color:#fde68a}.coverageTag.risk{background:#fff1f2;color:#be123c;border-color:#fecdd3}.coverageRateSafe{color:#047857;font-weight:900}.coverageRateWatch{color:#b45309;font-weight:900}.coverageRateRisk{color:#be123c;font-weight:900}.supplyLegend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;color:#64748b;margin:8px 0}.supplyLegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}.supplyLegend .blue{background:#2563eb}.supplyLegend .orange{background:#f97316}.coverageMiniNote{font-size:12px;color:#64748b;line-height:1.6;margin-top:8px}.factorySupplyLayout .chartCard{min-width:0}.factorySupplyLayout .pieWrap{align-items:center}.factorySupplyLayout .pie{width:170px;height:170px}.factorySupplyLayout .legend{max-height:190px}.factorySupplyLayout #ageBars .barRow{grid-template-columns:82px 1fr 58px}
 @media(max-width:1300px){.factorySupplyLayout{grid-template-columns:1fr}.factoryStack{grid-template-rows:auto}.supplyFormula{flex-wrap:wrap}.supplyBox{min-width:170px}}
 
-</style></head><body><div class="snapshotBanner"><h1>供应链 S&OP / PSI 测算快照</h1><p>导出时间：${stamp}。本快照保留原系统页面样式与数据，可直接发送给同事查看；不包含原始Excel文件，也不会重新计算。</p></div>${bodyClone.innerHTML}<script>
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+<style id="soft-product-polish-v2">
+/* ===== 产品化UI优化：柔和同色系过渡 + 上传中心筛选与按钮布局，不改任何计算逻辑 ===== */
+:root{
+  --bg:#f4f0e8!important;
+  --card:#fbf8f1!important;
+  --panel:#fbf8f1!important;
+  --line:#e8dfd1!important;
+  --line2:#f0e8dc!important;
+  --text:#2f2f34!important;
+  --muted:#7b746b!important;
+  --blue:#1f4f92!important;
+  --blue2:#eef3fb!important;
+  --orange:#eda636!important;
+  --amber:#ba7a18!important;
+  --head:#f6efe4!important;
+  --shadow:12px 16px 34px rgba(112,91,61,.10), -8px -8px 22px rgba(255,255,255,.82)!important;
+}
+html,body{
+  background:
+    radial-gradient(circle at 8% 6%, rgba(255,255,255,.92) 0, rgba(255,255,255,0) 32%),
+    radial-gradient(circle at 88% 10%, rgba(247,205,132,.16) 0, rgba(247,205,132,0) 34%),
+    linear-gradient(180deg,#f7f2e9 0%,#f1ece3 52%,#eee9e0 100%)!important;
+  color:var(--text)!important;
+}
+.wrap{
+  max-width:1680px!important;
+  padding:22px 28px!important;
+}
+.hero,.panel,.forecastSection,.deliverySection,.chartCard,.deliveryCard,.dashCard,.dashSide,.impactCard,.coverageCard,.supplyBox,.ageStackItem,.ageCard,.kpi{
+  background:linear-gradient(145deg,#fcf9f2 0%,#f4efe6 100%)!important;
+  border-color:rgba(232,223,209,.92)!important;
+  box-shadow:12px 16px 32px rgba(112,91,61,.095), -8px -8px 22px rgba(255,255,255,.72)!important;
+}
+.hero{
+  border-radius:26px!important;
+  overflow:hidden!important;
+}
+.heroHead{
+  background:linear-gradient(180deg,rgba(255,252,246,.72),rgba(247,242,234,.18))!important;
+}
+.safeBar{
+  background:linear-gradient(90deg,#f9f6ef 0%,#f2ede4 100%)!important;
+  border-top:1px solid rgba(232,223,209,.9)!important;
+}
+.tablebox,.deliveryChartBox,.trendSvgWrap,.riskMatrix{
+  background:linear-gradient(145deg,#fcfaf5,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  box-shadow:inset 4px 4px 10px rgba(112,91,61,.04), inset -4px -4px 12px rgba(255,255,255,.72)!important;
+}
+th,.miniTable th,.ratioMatrix th,.ageStackTable th{
+  background:#f1e7d8!important;
+  color:#554632!important;
+}
+td,.miniTable td{
+  background:rgba(255,252,246,.62)!important;
+}
+input,select,.supplierComboBtn{
+  background:linear-gradient(145deg,#fbf7ef,#f2ece2)!important;
+  border-color:#e0d4c3!important;
+  border-radius:16px!important;
+  box-shadow:inset 3px 3px 8px rgba(112,91,61,.06), inset -4px -4px 10px rgba(255,255,255,.86)!important;
+}
+button,.ghost,.dangerGhost,.chooseBtn,.tab,.subTab,.segBtn,.coverageBtn,.agingFilterBtn{
+  border-radius:16px!important;
+  border-color:#e0d4c3!important;
+  box-shadow:7px 9px 18px rgba(112,91,61,.09), -5px -5px 14px rgba(255,255,255,.72)!important;
+}
+.runBtn{
+  background:linear-gradient(135deg,#ffd27b 0%,#f2a93b 100%)!important;
+  border-color:#efad49!important;
+  color:#fff!important;
+  box-shadow:10px 14px 24px rgba(206,137,37,.24), -6px -6px 16px rgba(255,255,255,.76)!important;
+}
+.ghost{
+  color:#d88400!important;
+  background:linear-gradient(145deg,#fffaf2,#f4eee4)!important;
+}
+.dangerGhost{
+  color:#d88400!important;
+  background:linear-gradient(145deg,#fffaf2,#f4eee4)!important;
+  border-color:#ead9bd!important;
+}
+.tab.active,.subTab.active,.segBtn.active,.coverageBtn.active,.agingFilterBtn.active{
+  background:linear-gradient(135deg,#f7bd57,#ee9f28)!important;
+  border-color:#efad49!important;
+  color:#fff!important;
+}
+.kpis,.deliveryKpis{
+  justify-content:center!important;
+}
+.kpi{
+  min-height:108px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.kpi b,.dashCard b,.impactCard b,.coverageCard b{
+  color:#2f2f34!important;
+}
+.kpi span,.dashCard span,.impactCard span,.coverageCard span,.field label{
+  color:#7b746b!important;
+}
+.chartCard,.deliveryCard{
+  border-radius:24px!important;
+}
+.forecastSection,.deliverySection,.panel{
+  border-radius:26px!important;
+}
+.globalFilters{
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  box-shadow:12px 16px 32px rgba(112,91,61,.095), -8px -8px 22px rgba(255,255,255,.72)!important;
+}
+
+/* 上传中心：第一排放满7个筛选项，第二排右侧放开始计算/导出/重置 */
+.controlRow{
+  display:grid!important;
+  grid-template-columns:1fr auto auto auto auto!important;
+  grid-template-rows:auto auto!important;
+  gap:16px 14px!important;
+  align-items:center!important;
+  padding:0 28px 22px!important;
+}
+.controlPanel{
+  grid-column:1 / -1!important;
+  grid-row:1!important;
+  display:grid!important;
+  grid-template-columns:repeat(7,minmax(132px,1fr))!important;
+  gap:14px!important;
+  align-items:end!important;
+  padding:16px 18px!important;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border:1px solid #e8dfd1!important;
+  box-shadow:inset 4px 4px 10px rgba(112,91,61,.035), inset -4px -4px 12px rgba(255,255,255,.76)!important;
+}
+.controlPanel .field{
+  min-width:0!important;
+}
+.controlPanel .field label{
+  white-space:nowrap!important;
+}
+.controlPanel input,.controlPanel select{
+  width:100%!important;
+  height:44px!important;
+}
+#orderThreshold{
+  min-width:0!important;
+}
+#run.runBtn{
+  grid-column:2!important;
+  grid-row:2!important;
+  height:56px!important;
+  min-width:188px!important;
+  padding:0 28px!important;
+  font-size:20px!important;
+  align-self:center!important;
+}
+#exportWide{
+  grid-column:3!important;
+  grid-row:2!important;
+  height:42px!important;
+  min-width:96px!important;
+  align-self:center!important;
+}
+#exportSnapshot{
+  grid-column:4!important;
+  grid-row:2!important;
+  height:42px!important;
+  min-width:132px!important;
+  align-self:center!important;
+}
+#resetBtn{
+  grid-column:5!important;
+  grid-row:2!important;
+  height:42px!important;
+  min-width:88px!important;
+  align-self:center!important;
+}
+.forecastUploadBox{
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  border-radius:26px!important;
+  box-shadow:12px 16px 32px rgba(112,91,61,.095), -8px -8px 22px rgba(255,255,255,.72)!important;
+}
+.forecastFileCard,.stepCard,.completeUpload{
+  background:linear-gradient(145deg,#fcf9f2,#f4efe6)!important;
+  border-color:#e8dfd1!important;
+  box-shadow:10px 14px 28px rgba(112,91,61,.08), -7px -7px 20px rgba(255,255,255,.76)!important;
+}
+.forecastFileCard:hover,.stepCard:hover,.stepCard.loaded,.forecastFileCard.loaded{
+  border-color:#efb65c!important;
+  box-shadow:12px 18px 32px rgba(206,137,37,.13), -8px -8px 22px rgba(255,255,255,.78)!important;
+}
+
+/* 经营页与上传页保持同色系，减少卡片/底色断层感 */
+body:has(.appShell), .appShell, .mainContent, .content, main{
+  background:transparent!important;
+}
+.productShell,.appShell{
+  background:linear-gradient(180deg,#f7f2e9 0%,#eee9e0 100%)!important;
+}
+.sidebar,.leftNav,.productSidebar{
+  background:linear-gradient(180deg,#f7f2e9 0%,#eee9e0 100%)!important;
+  border-color:#e8dfd1!important;
+}
+.navItem.active,.navItem:hover{
+  background:linear-gradient(145deg,#fff9ef,#f2eadf)!important;
+  color:#d88400!important;
+  box-shadow:8px 10px 20px rgba(112,91,61,.08), -5px -5px 14px rgba(255,255,255,.72)!important;
+}
+
+@media(max-width:1400px){
+  .controlPanel{
+    grid-template-columns:repeat(4,minmax(132px,1fr))!important;
+  }
+}
+@media(max-width:1200px){
+  .controlRow{
+    grid-template-columns:1fr!important;
+  }
+  .controlPanel{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  #run.runBtn,#exportWide,#exportSnapshot,#resetBtn{
+    grid-column:1!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #run.runBtn{grid-row:2!important;}
+  #exportWide{grid-row:3!important;}
+  #exportSnapshot{grid-row:4!important;}
+  #resetBtn{grid-row:5!important;}
+}
+@media(max-width:720px){
+  .wrap{padding:16px!important;}
+  .controlPanel{
+    grid-template-columns:1fr!important;
+  }
+}
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+
+</head><body><div class="snapshotBanner"><h1>供应链 S&OP / PSI 测算快照</h1><p>导出时间：${stamp}。本快照保留原系统页面样式与数据，可直接发送给同事查看；不包含原始Excel文件，也不会重新计算。</p></div>${bodyClone.innerHTML}<script>
       // V21.11 快照基础交互兜底：页签切换必须独立于后续筛选/导出脚本。
       // 后面任何功能脚本即使异常，也不能影响基础页面切换。
       (function(){
@@ -3210,7 +4660,9 @@ function exportSnapshotHtml(){
       __snapRenderForecastRevision();
       setTimeout(function(){__snapBindTabs();__snapBindStaticExports();__snapBindSupplierCombo();__snapBindSopRiskButtons();__snapBindFactoryDrill();__snapBindForecastRevisionButtons();},30);
 
-    <\/script></body></html>`;
+    <\/script>
+
+</body></html>`;
     const blob=new Blob([html],{type:'text/html;charset=utf-8'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -3570,6 +5022,663 @@ function bindForecastRevisionControlsV205(){
 }
 setTimeout(bindForecastRevisionControlsV205,0);
 </script>
+
+<!-- ===== Neomorphism Skill UI Patch v2：仅 UI 样式与布局增强，不修改计算/数据逻辑 ===== -->
+<style id="neoSkillUIPatchV2">
+:root{
+  --bg:#f3f1ec!important;--card:#f8f6f1!important;--panel:#f8f6f1!important;
+  --line:#e4dfd4!important;--line2:#eee9df!important;--text:#46413b!important;--muted:#8b857a!important;
+  --blue:#e8a944!important;--blue2:#fff2d8!important;--cyan:#e6ba62!important;--green:#8fae8a!important;--green2:#eef5ea!important;
+  --purple:#c5a58a!important;--orange:#f0b24a!important;--red:#c86b5c!important;--redBg:#fff0ec!important;--amber:#b98235!important;
+  --head:#f6f0e6!important;--shadow:14px 16px 34px rgba(176,166,148,.22),-10px -10px 26px rgba(255,255,255,.92)!important;
+}
+html,body{background:radial-gradient(circle at 18% 10%,#fffaf1 0,#f3f1ec 34%,#eeece6 100%)!important;color:var(--text)!important;}
+body.neo-ui{padding-left:286px;transition:padding-left .22s ease;}body.neo-ui.neo-collapsed{padding-left:86px;}
+.wrap{max-width:1720px!important;padding:24px 28px!important;}
+.neoSidebar{position:fixed;left:0;top:0;bottom:0;width:258px;z-index:999;background:linear-gradient(180deg,#f8f6f1,#ece9e2);border-right:1px solid rgba(255,255,255,.7);box-shadow:14px 0 38px rgba(176,166,148,.18);padding:18px 14px;display:flex;flex-direction:column;gap:14px;overflow:auto;}
+.neoSidebarHead{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 6px;}.neoSidebarTitle{font-size:12px;letter-spacing:.18em;color:#9a9184;font-weight:900;white-space:nowrap;}
+.neoSidebarToggle{width:42px!important;height:42px!important;border:0!important;border-radius:16px!important;color:#e8a944!important;background:linear-gradient(145deg,#fffaf2,#ede9df)!important;box-shadow:8px 8px 18px rgba(176,166,148,.22),-7px -7px 16px rgba(255,255,255,.92)!important;padding:0!important;}
+.mainTabs.neo-moved{position:static!important;display:flex!important;flex-direction:column!important;gap:12px!important;padding:0!important;background:transparent!important;backdrop-filter:none!important;margin:0!important;}
+.mainTabs.neo-moved .tab{width:100%!important;height:52px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;border:0!important;border-radius:18px!important;background:transparent!important;color:#8b857a!important;font-weight:900!important;box-shadow:none!important;text-align:left!important;padding:0 16px!important;}
+.mainTabs.neo-moved .tab:before{content:attr(data-neo-icon);width:22px;text-align:center;font-size:18px;color:#e8a944;flex:0 0 22px;}.mainTabs.neo-moved .tab.active{background:linear-gradient(145deg,#fff7e9,#ede8dd)!important;color:#e19b25!important;box-shadow:9px 9px 20px rgba(176,166,148,.22),-8px -8px 18px rgba(255,255,255,.95)!important;}
+body.neo-collapsed .neoSidebar{width:72px;padding-left:10px;padding-right:10px;}body.neo-collapsed .neoSidebarTitle,body.neo-collapsed .mainTabs.neo-moved .tab{font-size:0!important;padding:0!important;justify-content:center!important;}body.neo-collapsed .mainTabs.neo-moved .tab:before{font-size:20px;}body.neo-collapsed .neoFilterSlot{display:none!important;}
+.neoFilterSlot .globalFilters{position:static!important;display:block!important;margin-top:8px!important;padding:12px!important;border-radius:22px!important;background:linear-gradient(145deg,#fbf9f4,#ede9df)!important;box-shadow:inset 5px 5px 12px rgba(176,166,148,.16),inset -5px -5px 12px rgba(255,255,255,.9)!important;}
+.neoFilterSlot .globalFilterGrid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;}.neoFilterSlot .globalFilterGrid h3{font-size:14px!important;height:auto!important;}.neoFilterSlot select,.neoFilterSlot input,.neoFilterSlot button{width:100%!important;}
+.hero,.panel,.forecastUploadBox,.forecastSection,.deliverySection,.deliveryCard,.chartCard,.dashCard,.dashSide,.tablebox,.completeUpload,.stepCard,.forecastFileCard,.kpi,.impactCard,.supplyBox,.coverageCard,.ageStackItem,.ageCard,.agingDetailBox{background:linear-gradient(145deg,#fbf9f4,#efede7)!important;border-color:rgba(255,255,255,.72)!important;border-radius:24px!important;box-shadow:var(--shadow)!important;}
+.hero{overflow:hidden!important}.heroHead{justify-content:center!important;text-align:center!important}.brand{justify-content:center!important}.brandIcon,.bigIcon,.excelIcon{background:linear-gradient(145deg,#fff4d9,#eee9df)!important;color:#e7a53b!important;box-shadow:8px 8px 18px rgba(176,166,148,.20),-8px -8px 18px rgba(255,255,255,.92)!important;}
+.steps,.kpis,.deliveryKpis,.dashGrid,.chartGrid,.deliveryGrid,.splitGrid{gap:18px!important}.fixedKpis{top:0!important;z-index:40!important;margin:0 auto 18px!important;padding:18px!important;background:rgba(243,241,236,.78)!important;border-radius:28px!important;backdrop-filter:blur(12px)!important;box-shadow:none!important;}.kpis{justify-content:center!important;align-items:stretch!important;}.kpi{text-align:center!important;min-height:116px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;}.kpi span{color:#9a9184!important}.kpi b{color:#45403a!important;}
+button,.chooseBtn,input,select{border-radius:16px!important;border-color:#e5ded1!important;background:linear-gradient(145deg,#fffaf2,#efebe3)!important;color:#71695e!important;box-shadow:6px 6px 14px rgba(176,166,148,.16),-6px -6px 14px rgba(255,255,255,.86)!important;}button,.chooseBtn{color:#e19b25!important;font-weight:900!important}.runBtn,.tab.active,.segBtn.active,.coverageBtn.active,.agingFilterBtn.active,.sopRiskBtn.active{background:linear-gradient(135deg,#ffd98a,#efad42)!important;color:#fff!important;border-color:#efad42!important;}
+th{background:#f4eadc!important;color:#5c5348!important;}td{color:#514b44!important}.bar,.supplierBarFill{background:linear-gradient(90deg,#ffd98a,#efad42)!important}.pie{box-shadow:10px 12px 26px rgba(176,166,148,.2),-8px -8px 20px rgba(255,255,255,.9)!important;}
+@media(max-width:1100px){body.neo-ui{padding-left:0!important}.neoSidebar{position:static!important;width:auto!important;margin:12px 14px;border-radius:24px;}.mainTabs.neo-moved{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}.neoFilterSlot .globalFilterGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+<script id="neoSkillUILayoutPatchV2">
+(function(){
+  function applyNeoLayout(){
+    var tabs=document.querySelector('.mainTabs');
+    if(!tabs || document.body.classList.contains('neo-ui-ready')) return;
+    document.body.classList.add('neo-ui','neo-ui-ready');
+    if(localStorage.getItem('neoSidebarCollapsed')==='1') document.body.classList.add('neo-collapsed');
+    var side=document.createElement('aside');
+    side.className='neoSidebar';
+    side.innerHTML='<div class="neoSidebarHead"><div class="neoSidebarTitle">SOFT UI PANEL</div><button type="button" class="neoSidebarToggle" title="展开/收起侧栏">☰</button></div><div class="neoNavSlot"></div><div class="neoFilterSlot"></div>';
+    document.body.insertBefore(side, document.body.firstChild);
+    var icons={upload:'☁',factory:'◔',dashboard:'▦',wide:'≡',transfer:'⇄',forecast:'⌁',delivery:'◷',log:'!'};
+    tabs.querySelectorAll('.tab').forEach(function(btn){btn.setAttribute('data-neo-icon',icons[btn.dataset.tab]||'•');});
+    tabs.classList.add('neo-moved');
+    side.querySelector('.neoNavSlot').appendChild(tabs);
+    var filters=document.getElementById('globalFilters');
+    if(filters) side.querySelector('.neoFilterSlot').appendChild(filters);
+    side.querySelector('.neoSidebarToggle').addEventListener('click',function(){
+      document.body.classList.toggle('neo-collapsed');
+      localStorage.setItem('neoSidebarCollapsed',document.body.classList.contains('neo-collapsed')?'1':'0');
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',applyNeoLayout); else applyNeoLayout();
+})();
+</script>
+
+
+<script>
+/* ===== v2.0 产品级交互修复：测算基准日期默认今天，可手动修改 ===== */
+(function(){
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function todayValue(){
+    var d = new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+  }
+  function syncStartMonthFromDate(force){
+    var dateEl = document.getElementById('today');
+    var monthEl = document.getElementById('startMonth');
+    if(!dateEl || !monthEl || !dateEl.value) return;
+    if(force || !monthEl.dataset.userEdited){
+      monthEl.value = dateEl.value.slice(0,7);
+    }
+  }
+  function initDefaultBaseDate(){
+    var dateEl = document.getElementById('today');
+    var monthEl = document.getElementById('startMonth');
+    if(!dateEl) return;
+    var legacyDefaults = {'2026-06-02':true,'2026/06/02':true,'2026-06-22':true,'2026/06/22':true};
+    if(!dateEl.value || legacyDefaults[dateEl.value]){
+      dateEl.value = todayValue();
+      syncStartMonthFromDate(true);
+    }else{
+      syncStartMonthFromDate(false);
+    }
+    if(monthEl){
+      monthEl.addEventListener('change', function(){ monthEl.dataset.userEdited = '1'; }, true);
+    }
+    dateEl.addEventListener('change', function(){
+      if(monthEl) monthEl.dataset.userEdited = '';
+      syncStartMonthFromDate(true);
+    }, true);
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initDefaultBaseDate);
+  }else{
+    initDefaultBaseDate();
+  }
+})();
+</script>
+
+
+<!-- ===== V3.0 Product UI Theme：低饱和纯色体系；仅视觉层，不修改计算逻辑 ===== -->
+<style id="productUIThemeV3">
+:root{
+  --ui-bg:#FDFBF7!important;
+  --ui-surface:#FFFDFC!important;
+  --ui-surface-2:#FBF6EE!important;
+  --ui-kpi:#F6E6C8!important;
+  --ui-kpi-hover:#F8EBD3!important;
+  --ui-primary:#F4B248!important;
+  --ui-primary-hover:#ECA53A!important;
+  --ui-primary-soft:#FFF2DC!important;
+  --ui-risk-bg:#FFF2E2!important;
+  --ui-risk-text:#A86A17!important;
+  --ui-success-bg:#EEF6EA!important;
+  --ui-success-text:#5F8E62!important;
+  --ui-border:#E6D6B8!important;
+  --ui-border-soft:#EEE3D2!important;
+  --ui-text:#42382B!important;
+  --ui-muted:#7E7264!important;
+  --ui-shadow:0 4px 12px rgba(88,65,32,.045)!important;
+  --ui-shadow-hover:0 6px 16px rgba(88,65,32,.07)!important;
+  --bg:#FDFBF7!important;
+  --card:#FFFDFC!important;
+  --panel:#FFFDFC!important;
+  --line:#E6D6B8!important;
+  --line2:#EEE3D2!important;
+  --text:#42382B!important;
+  --muted:#7E7264!important;
+  --blue:#D9902E!important;
+  --blue2:#FFF2DC!important;
+  --cyan:#C99A52!important;
+  --green:#8FAE8A!important;
+  --green2:#EEF6EA!important;
+  --purple:#BFA48E!important;
+  --orange:#F4B248!important;
+  --red:#B97862!important;
+  --redBg:#FFF0E8!important;
+  --amber:#A86A17!important;
+  --head:#F6E6C8!important;
+  --shadow:0 4px 12px rgba(88,65,32,.045)!important;
+}
+html,body{
+  background:#FDFBF7!important;
+  color:var(--ui-text)!important;
+}
+body{font-feature-settings:"tnum" 1;}
+/* 基础面板：纯色、轻阴影、低对比 */
+.hero,.panel,.forecastUploadBox,.forecastSection,.deliverySection,.deliveryCard,.chartCard,.dashCard,.dashSide,.tablebox,
+.completeUpload,.stepCard,.forecastFileCard,.impactCard,.supplyBox,.coverageCard,.ageStackItem,.ageCard,.agingDetailBox,
+.globalFilters,.sopActions,.neoSidebar,.neoFilterSlot .globalFilters{
+  background:var(--ui-surface)!important;
+  background-image:none!important;
+  border:1px solid var(--ui-border-soft)!important;
+  box-shadow:var(--ui-shadow)!important;
+  border-radius:20px!important;
+}
+.hero,.forecastUploadBox,.forecastSection,.deliverySection,.panel{box-shadow:0 5px 14px rgba(88,65,32,.045)!important;}
+.stepCard:hover,.forecastFileCard:hover,.impactCard.linkCard:hover,.ageCard:hover,.ageStackItem:hover{
+  background:var(--ui-surface-2)!important;
+  border-color:var(--ui-border)!important;
+  box-shadow:var(--ui-shadow-hover)!important;
+  transform:translateY(-1px)!important;
+}
+/* 侧边栏与导航 */
+.neoSidebar{
+  background:#FFFDFC!important;
+  border-right:1px solid var(--ui-border-soft)!important;
+  box-shadow:4px 0 14px rgba(88,65,32,.045)!important;
+}
+.neoSidebarToggle,.mainTabs.neo-moved .tab,input,select,button,.chooseBtn,.supplierComboBtn{
+  background:#FFF9F0!important;
+  background-image:none!important;
+  border:1px solid var(--ui-border-soft)!important;
+  box-shadow:0 2px 7px rgba(88,65,32,.035)!important;
+  color:var(--ui-text)!important;
+}
+.mainTabs.neo-moved .tab.active{
+  background:var(--ui-primary-soft)!important;
+  background-image:none!important;
+  color:#A86A17!important;
+  border:1px solid #F0D4A0!important;
+  box-shadow:0 3px 9px rgba(88,65,32,.045)!important;
+}
+.mainTabs.neo-moved .tab:before,.neoSidebarToggle{color:#D9902E!important;}
+/* 顶部上传和图标降饱和 */
+.brandIcon,.bigIcon,.excelIcon,.badge,.sheetTag{
+  background:#FFF2DC!important;
+  background-image:none!important;
+  color:#D9902E!important;
+  border:1px solid #F0D4A0!important;
+  box-shadow:0 3px 8px rgba(88,65,32,.04)!important;
+}
+/* 顶部 KPI：用户指定纯色，不使用渐变 */
+.fixedKpis{
+  background:#FDFBF7!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  border:0!important;
+  padding:14px 0!important;
+}
+.fixedKpis .kpis,.kpis{
+  gap:16px!important;
+}
+.fixedKpis .kpi,#kpis .kpi,.kpis .kpi,.dashCards .dashCard{
+  background:var(--ui-kpi)!important;
+  background-image:none!important;
+  border:1px solid #E4CFA9!important;
+  border-radius:18px!important;
+  box-shadow:0 4px 10px rgba(88,65,32,.04)!important;
+  min-height:104px!important;
+  text-align:center!important;
+}
+.fixedKpis .kpi:hover,#kpis .kpi:hover,.kpis .kpi:hover{
+  background:var(--ui-kpi-hover)!important;
+  box-shadow:0 5px 12px rgba(88,65,32,.055)!important;
+}
+.fixedKpis .kpi span,#kpis .kpi span,.kpis .kpi span,.dashCard span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+}
+.fixedKpis .kpi b,#kpis .kpi b,.kpis .kpi b,.dashCard b{
+  color:#9A5A08!important;
+  font-weight:900!important;
+  letter-spacing:.2px!important;
+}
+/* 按钮系统：低饱和纯色 */
+.runBtn,button.primary,.tab.active,.segBtn.active,.coverageBtn.active,.agingFilterBtn.active,.sopRiskBtn.active{
+  background:var(--ui-primary)!important;
+  background-image:none!important;
+  border-color:#E0A13A!important;
+  color:#fff!important;
+  box-shadow:0 4px 10px rgba(154,90,8,.10)!important;
+}
+.runBtn:hover,button.primary:hover,.coverageBtn.active:hover,.agingFilterBtn.active:hover{
+  background:var(--ui-primary-hover)!important;
+  box-shadow:0 5px 12px rgba(154,90,8,.13)!important;
+}
+.ghost,.dangerGhost,.smallBtn,.coverageBtn,.agingFilterBtn,.segBtn,.subTab,.tab:not(.active){
+  background:#FFF9F0!important;
+  background-image:none!important;
+  color:#8A621F!important;
+  border:1px solid var(--ui-border-soft)!important;
+  box-shadow:0 2px 7px rgba(88,65,32,.035)!important;
+}
+/* 风险提示与缺货数据显化 */
+.risk,.riskResult,.coverageTag.short,.coverageTag.severe,.tagDelay,.tagBad,.reasonRisk,.causeTag.bad,
+.noShipFlag,.actionTag.order,.metricBad{
+  background:var(--ui-risk-bg)!important;
+  color:var(--ui-risk-text)!important;
+  border-color:#F1C999!important;
+}
+.ok,.tagGood,.reasonOk,.coverageTag.best,.tagOnTime,.actionTag.ship,.metricGood{
+  background:var(--ui-success-bg)!important;
+  color:var(--ui-success-text)!important;
+  border-color:#CADFBE!important;
+}
+.warn,.tagWarn,.coverageTag.watch,.coverageTag.light,.coverageTag.over,.actionTag.chase,.causeTag.warn{
+  background:#FFF7E9!important;
+  color:#9A6B23!important;
+  border-color:#EED5A6!important;
+}
+/* 表格：暖色表头、低刺激网格线 */
+th,.miniTable th,.ratioMatrix th,.agingMonthSummary th,.agingMini th{
+  background:#F6E6C8!important;
+  color:#5E4B34!important;
+  border-color:#E8D9BC!important;
+  box-shadow:none!important;
+}
+td,.miniTable td{
+  color:#4E4437!important;
+  border-color:#F0E6D7!important;
+}
+tr:hover td{background:#FFF8EC!important;}
+.tablebox{background:#FFFDFC!important;}
+/* 图表配色降饱和 */
+.pie{
+  background:conic-gradient(#7EA7D8 0 40%,#8FBF9B 40% 70%,#D9B96A 70% 86%,#E6A55D 86% 94%,#B7B7B7 94% 100%)!important;
+  box-shadow:0 4px 10px rgba(88,65,32,.05)!important;
+}
+.bar,.supplierBarFill,.ageStackSeg{
+  background:#E6A55D!important;
+  background-image:none!important;
+}
+.supplyStock{background:#7EA7D8!important;}
+.supplyUnprod{background:#E6A55D!important;}
+.supplierBarTrack,.barBg,.supplyTrack{
+  background:#F2E8D7!important;
+}
+.sw[style*="background"]{filter:saturate(.72) brightness(1.02)!important;}
+/* 输入控件 */
+input:focus,select:focus,.supplierCombo.open .supplierComboBtn{
+  border-color:#E0A13A!important;
+  box-shadow:0 0 0 3px rgba(244,178,72,.16)!important;
+  outline:none!important;
+}
+.field label,.globalFilters .field label{color:#6E5B46!important;font-weight:800!important;}
+.help,.uploadHint,.teamLink{color:#A86A17!important;}
+.safeBar{
+  background:#FFFDFC!important;
+  border-top:1px solid var(--ui-border-soft)!important;
+  color:#7E7264!important;
+}
+.safeBar b{color:#D9902E!important;}
+/* 强制移除旧版大面积渐变/强阴影 */
+*[style*="linear-gradient"]{ }
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+
+<style id="enterpriseThemeUnifiedV31">
+/* ===== V3.1 Enterprise Unified Theme：单一配色体系，仅视觉层；不改计算逻辑 ===== */
+:root{
+  --ui-bg:#FDFBF7!important;
+  --ui-surface:#FFFDFC!important;
+  --ui-surface-2:#FBF4EA!important;
+  --ui-kpi:#F6E6C8!important;
+  --ui-primary:#D69A3A!important;
+  --ui-primary-hover:#C88928!important;
+  --ui-border:#E7D5B7!important;
+  --ui-border-soft:#EFE3D0!important;
+  --ui-text:#3F3428!important;
+  --ui-muted:#7B6A58!important;
+  --ui-blue:#7FA5D6!important;
+  --ui-green:#8FB89B!important;
+  --ui-yellow:#D8BC74!important;
+  --ui-red:#C98572!important;
+  --ui-gray:#B9B3A8!important;
+  --ui-shadow:0 6px 16px rgba(88,65,32,.055)!important;
+  --ui-shadow-hover:0 8px 20px rgba(88,65,32,.08)!important;
+}
+html,body{background:var(--ui-bg)!important;color:var(--ui-text)!important;}
+body{background:var(--ui-bg)!important;}
+.hero,.panel,.forecastUploadBox,.forecastSection,.deliverySection,.deliveryCard,.chartCard,.dashCard,.dashSide,.tablebox,.completeUpload,.stepCard,.forecastFileCard,.impactCard,.coverageCard,.supplyBox,.ageStackItem,.ageCard,.agingDetailBox,.globalFilters,.controlPanel,.controlRow{
+  background:var(--ui-surface)!important;
+  border:1px solid var(--ui-border-soft)!important;
+  box-shadow:var(--ui-shadow)!important;
+  border-radius:18px!important;
+}
+.hero,.panel,.forecastUploadBox,.forecastSection,.deliverySection{border-color:var(--ui-border)!important;}
+.brandIcon,.excelIcon,.completeUpload,.controlPanel,.forecastUploadBox,.forecastFileCard,.stepCard,.dashCard,.chartCard,.deliveryCard,.impactCard,.coverageCard,.supplyBox,.ageCard,.ageStackItem{
+  background-image:none!important;
+}
+.kpis,.fixedKpis,.deliveryKpis{
+  background:var(--ui-surface)!important;
+  border-color:var(--ui-border-soft)!important;
+  box-shadow:var(--ui-shadow)!important;
+  gap:16px!important;
+}
+.kpi,.deliveryKpis .kpi,.forecastSection .kpi,#forecastKpis .kpi,#deliveryKpis .kpi,#kpis .kpi,.dashCard{
+  background:var(--ui-kpi)!important;
+  background-image:none!important;
+  border:1px solid var(--ui-border)!important;
+  box-shadow:var(--ui-shadow)!important;
+  color:var(--ui-text)!important;
+  border-radius:18px!important;
+}
+.kpi:hover,.deliveryKpis .kpi:hover,#kpis .kpi:hover,.dashCard:hover{
+  box-shadow:var(--ui-shadow-hover)!important;
+  transform:none!important;
+}
+.kpi span,.dashCard span,.impactCard span,.coverageCard span,.supplyBox span{color:var(--ui-muted)!important;font-weight:800!important;}
+.kpi b,.dashCard b,.deliveryKpis .kpi b,#kpis .kpi b{color:#8F540B!important;font-weight:900!important;}
+.supplyBox{background:#FBF4EA!important;border-color:var(--ui-border)!important;}
+.supplyBox.orange{background:#F6E6C8!important;border-color:var(--ui-border)!important;}
+.supplyBox.green{background:#EDF3E8!important;border-color:#D5E0CB!important;}
+.supplyBox.orange b{color:#9A5A08!important;}
+.supplyBox.green b{color:#5E7E52!important;}
+button,.runBtn,.tab.active,.subTab.active,.segBtn.active,.coverageBtn.active,.agingFilterBtn.active,.sopRiskBtn.active,.chooseBtn,.smallBtn{
+  background:var(--ui-primary)!important;
+  background-image:none!important;
+  border-color:var(--ui-primary)!important;
+  color:#fff!important;
+  box-shadow:0 5px 12px rgba(214,154,58,.16)!important;
+}
+button:hover,.runBtn:hover,.chooseBtn:hover,.smallBtn:hover{background:var(--ui-primary-hover)!important;border-color:var(--ui-primary-hover)!important;}
+.ghost,.dangerGhost,#resetBtn,#exportWide,#exportWide2,#exportSnapshot,#exportDeliveryAnalysis,#exportForecastAnalysis,#exportShipPlan,#exportBuyPlan,#exportTransferPlan{
+  background:var(--ui-surface)!important;
+  color:#9A5A08!important;
+  border-color:var(--ui-border)!important;
+  box-shadow:var(--ui-shadow)!important;
+}
+input,select,.supplierComboBtn{
+  background:#FFFCF7!important;
+  border-color:var(--ui-border)!important;
+  color:var(--ui-text)!important;
+  box-shadow:none!important;
+}
+input:focus,select:focus,.supplierCombo.open .supplierComboBtn{border-color:var(--ui-primary)!important;box-shadow:0 0 0 3px rgba(214,154,58,.16)!important;}
+.field label,.globalFilters .field label{color:#6E5B46!important;}
+th,.miniTable th,.ratioMatrix th,.ageStackTable th{
+  background:#F2E6D3!important;
+  color:#5E4C38!important;
+  border-color:var(--ui-border-soft)!important;
+}
+td{border-color:#EFE5D6!important;color:#4C4034!important;}
+tr:hover td{background:#FFF5E8!important;}
+.tablebox{background:var(--ui-surface)!important;}
+.pie{border-color:var(--ui-border)!important;}
+.sw{border-radius:3px!important;}
+.bar,.supplierBarFill{background:var(--ui-primary)!important;background-image:none!important;}
+.barBg,.supplierBarTrack,.supplyTrack{background:#F2E4D0!important;}
+.supplyStock{background:var(--ui-blue)!important;}
+.supplyUnprod{background:var(--ui-primary)!important;}
+.supplyLegend .blue{background:var(--ui-blue)!important;}
+.supplyLegend .orange{background:var(--ui-primary)!important;}
+.legendItem:hover,.barRow:hover,.supplierBarRow:hover{background:#FFF4E3!important;}
+.legendItem.active,.barRow.active,.supplierBarRow.active{background:#F8EBD3!important;border-radius:10px!important;}
+.risk,.tagBad,.riskResult,.riskResult.short,.coverageTag.short,.coverageTag.severe,.tagDelay,.agingRisk,.reasonRisk,.metricBad{
+  background:#F9E4DA!important;
+  color:#9A4B35!important;
+  border-color:#E8BCA9!important;
+}
+.ok,.tagGood,.coverageTag.best,.tagOnTime,.agingOk,.reasonOk,.metricGood{
+  background:#EDF3E8!important;
+  color:#5E7E52!important;
+  border-color:#D5E0CB!important;
+}
+.warn,.tagWarn,.coverageTag.watch,.coverageTag.light,.coverageTag.over,.tagWait,.agingWarn,.actionTag.chase{
+  background:#FFF0D8!important;
+  color:#9A5A08!important;
+  border-color:#E9C891!important;
+}
+.shortageRiskHint{background:#FFF0D8!important;color:#9A5A08!important;border-color:#E9C891!important;font-weight:900!important;box-shadow:inset 4px 0 0 var(--ui-primary)!important;}
+tr.hasShortageRisk td{background:#FFF9EF!important;}
+tr.hasShortageRisk td.shortageRiskHint{background:#FFE8BF!important;}
+.sideNav,.appSidebar{background:#FFFDFC!important;border-color:var(--ui-border-soft)!important;}
+.tab,.subTab,.coverageBtn,.agingFilterBtn,.segBtn{background:var(--ui-surface)!important;color:#6E5B46!important;border-color:var(--ui-border)!important;}
+.tablebox::-webkit-scrollbar,.supplierComboOptions::-webkit-scrollbar,.legend::-webkit-scrollbar,.supplyBarList::-webkit-scrollbar{width:10px;height:10px;}
+.tablebox::-webkit-scrollbar-thumb,.supplierComboOptions::-webkit-scrollbar-thumb,.legend::-webkit-scrollbar-thumb,.supplyBarList::-webkit-scrollbar-thumb{background:#D8C3A5;border-radius:999px;border:2px solid #F6EFE5;}
+.tablebox::-webkit-scrollbar-track,.supplierComboOptions::-webkit-scrollbar-track,.legend::-webkit-scrollbar-track,.supplyBarList::-webkit-scrollbar-track{background:#F4EADB;border-radius:999px;}
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+<script id="enterpriseThemeUnifiedV31Script">
+(function(){
+  var THEME_COLORS=['#D69A3A','#8FB89B','#7FA5D6','#D8BC74','#B9B3A8','#C99472','#A9B8A0','#C8A46A'];
+  window.__SCM_THEME_COLORS__=THEME_COLORS.slice();
+  try{ window.barColor=function(i){return THEME_COLORS[(Number(i)||0)%THEME_COLORS.length];}; }catch(e){}
+  function markShortageRisk(){
+    try{
+      document.querySelectorAll('td, th').forEach(function(cell){
+        var txt=(cell.textContent||'').replace(/\s+/g,'');
+        if(/缺货风险|月缺\d+件|欠\d+件|缺\d+件/.test(txt)){
+          cell.classList.add('shortageRiskHint');
+          var tr=cell.closest('tr'); if(tr) tr.classList.add('hasShortageRisk');
+        }
+      });
+    }catch(e){}
+  }
+  function syncLegendAndInlineCharts(){
+    try{
+      document.querySelectorAll('.supplyLegend .blue').forEach(function(x){x.style.background='#7FA5D6';});
+      document.querySelectorAll('.supplyLegend .orange').forEach(function(x){x.style.background='#D69A3A';});
+      document.querySelectorAll('.supplyStock').forEach(function(x){x.style.background='#7FA5D6';});
+      document.querySelectorAll('.supplyUnprod').forEach(function(x){x.style.background='#D69A3A';});
+      document.querySelectorAll('#supplierPie .sw').forEach(function(sw,idx){sw.style.background=THEME_COLORS[idx%THEME_COLORS.length];});
+    }catch(e){}
+  }
+  var scheduled=false;
+  function refresh(){
+    if(scheduled) return;
+    scheduled=true;
+    requestAnimationFrame(function(){scheduled=false; markShortageRisk(); syncLegendAndInlineCharts();});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',refresh); else refresh();
+  new MutationObserver(refresh).observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['style','class']});
+})();
+</script>
+
 </body>
 </html>
 
@@ -3590,4 +5699,327 @@ setTimeout(bindForecastRevisionControlsV205,0);
   line-height:1.72!important;
   padding:14px 16px!important;
 }
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
+</style>
+
+
+<!-- UI Color Optimization Patch: soft low-saturation warm palette, no calculation changes -->
+<style id="ui-color-soft-palette-patch">
+:root{
+  --bg:#f4efe7!important;
+  --card:#fffaf2!important;
+  --panel:#fff8ee!important;
+  --line:#eadfce!important;
+  --line2:#f1e8dc!important;
+  --text:#3f3a32!important;
+  --muted:#8b8173!important;
+  --blue:#c7852f!important;
+  --blue2:#fff2dc!important;
+  --green:#8db89c!important;
+  --green2:#edf6ef!important;
+  --purple:#bba8c9!important;
+  --orange:#eea63a!important;
+  --red:#b66b52!important;
+  --redBg:#fff0e8!important;
+  --amber:#b8792d!important;
+  --head:#fbf4ea!important;
+  --shadow:12px 12px 34px rgba(150,124,91,.13), -10px -10px 28px rgba(255,255,255,.76)!important;
+}
+html,body{
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255,238,210,.72), transparent 30%),
+    radial-gradient(circle at 90% 12%, rgba(255,248,232,.86), transparent 32%),
+    linear-gradient(180deg,#f7f1e8 0%,#efe9df 100%)!important;
+  color:var(--text)!important;
+}
+.wrap,.neo-main,.neo-content{background:transparent!important;}
+.hero,.panel,.chartCard,.deliveryCard,.deliverySection,.forecastSection,.forecastUploadBox,
+.globalFilters,.completeUpload,.controlPanel,.sopActions,.dashSide,.tablebox,
+.forecastFileCard,.impactCard,.coverageCard,.supplyBox,.agingDetailBox{
+  background:linear-gradient(145deg,#fffbf5 0%,#f5eee4 100%)!important;
+  border-color:#eadfce!important;
+  box-shadow:12px 12px 34px rgba(150,124,91,.12), -10px -10px 26px rgba(255,255,255,.78)!important;
+}
+.hero,.panel,.chartCard,.deliveryCard,.deliverySection,.forecastSection,.globalFilters,.forecastUploadBox{
+  border-radius:22px!important;
+}
+.safeBar,.mainTabs,.fixedKpis{
+  background:rgba(255,248,238,.86)!important;
+  border-color:#eadfce!important;
+  backdrop-filter:blur(12px)!important;
+}
+input,select,.supplierComboBtn,button.ghost,button.dangerGhost,.coverageBtn,.segBtn,.subTab,.tab,.agingFilterBtn{
+  background:linear-gradient(145deg,#fffaf3,#f3eadf)!important;
+  border-color:#e6d8c5!important;
+  color:#5c5144!important;
+  box-shadow:inset 2px 2px 5px rgba(142,116,82,.08), inset -2px -2px 5px rgba(255,255,255,.8)!important;
+}
+input:focus,select:focus,.supplierCombo.open .supplierComboBtn{
+  border-color:#e3a24e!important;
+  box-shadow:0 0 0 3px rgba(230,164,78,.14), inset 2px 2px 5px rgba(142,116,82,.06)!important;
+}
+button,.runBtn,.tab.active,.subTab.active,.coverageBtn.active,.segBtn.active,.agingFilterBtn.active,
+.sopActions .shipBtn,.sopActions .buyBtn{
+  background:linear-gradient(145deg,#f5b457 0%,#e99c36 100%)!important;
+  border-color:#e09a35!important;
+  color:#fff!important;
+  box-shadow:9px 9px 22px rgba(189,128,46,.22), -7px -7px 18px rgba(255,255,255,.75)!important;
+}
+.help,.teamLink,.forecastSectionTitle,.deliveryTitle,.dashTitle,.forecastUploadTitle,
+.globalFilterGrid h3,.sopActions .leftTitle{
+  color:#7c572b!important;
+}
+.kpis{
+  align-items:stretch!important;
+}
+.kpi,.dashCard,.deliveryKpis .kpi,.fixedKpis .kpi{
+  background:linear-gradient(145deg,#fff3da 0%,#fffaf1 58%,#f4eadc 100%)!important;
+  border:1px solid #efd8b6!important;
+  box-shadow:10px 10px 24px rgba(154,113,54,.16), -8px -8px 20px rgba(255,255,255,.78)!important;
+}
+.kpi span,.dashCard span,.impactCard span,.coverageCard span,.supplyBox span{
+  color:#8d7d68!important;
+}
+.kpi b,.dashCard b,.deliveryKpis .kpi b,.fixedKpis .kpi b{
+  color:#9b5c12!important;
+}
+.kpi.supplyAbilityKpi,.supplyAbilityKpi{
+  background:linear-gradient(145deg,#fff1d6,#fbf5e8)!important;
+  border-color:#eccb99!important;
+}
+th{
+  background:#f4eadb!important;
+  color:#66533a!important;
+}
+td{
+  background:#fffaf1!important;
+  color:#4d453c!important;
+  border-color:#eee4d6!important;
+}
+tr:hover td{
+  background:#fff3df!important;
+}
+.shipHead,.buyHead,.baseHead{
+  background:#f1e5d2!important;
+  color:#735225!important;
+}
+.pie{
+  background:conic-gradient(#ffb58e 0 45%,#9fc7a9 45% 74%,#f1d37b 74% 86%,#d6b6c9 86% 94%,#b9c3dc 94% 100%)!important;
+  filter:saturate(.72) brightness(1.04)!important;
+}
+.bar,.supplierBarFill,.supplyStock,.supplyUnprod{
+  filter:saturate(.62) brightness(1.08)!important;
+}
+.bar{
+  background:linear-gradient(90deg,#f6bd79,#eaa149)!important;
+}
+.supplierBarTrack,.supplyTrack,.barBg,.ageStack{
+  background:#f0e5d6!important;
+}
+.supplierBarFill{
+  background:linear-gradient(90deg,#f3c691,#e99b43)!important;
+}
+.supplyStock{
+  background:#e8ad61!important;
+}
+.supplyUnprod{
+  background:#f0c894!important;
+}
+.ageStackSeg{
+  filter:saturate(.50) brightness(1.10)!important;
+}
+.legendItem:hover,.barRow:hover,.supplierBarRow:hover,.supplierBarRow.active,
+.ageCard:hover,.ageCard.active,.ageStackItem:hover,.ageStackItem.active{
+  background:#fff0d8!important;
+  border-color:#ecc58e!important;
+}
+.sw{filter:saturate(.62) brightness(1.08)!important;}
+.risk,.metricBad,.coverageRateShort,.coverageRateSevere{
+  color:#a75e30!important;
+}
+.ok,.metricGood,.coverageRateBest{
+  color:#5f8b63!important;
+}
+.warn,.coverageRateLight,.coverageRateOver{
+  color:#ad752c!important;
+}
+.riskResult,.coverageTag.short,.coverageTag.severe,.reasonRisk,.tagBad,
+.actionTag.order,.noShipFlag{
+  background:#fff1de!important;
+  color:#a46225!important;
+  border-color:#f0c693!important;
+}
+.coverageTag.best,.reasonOk,.tagGood,.actionTag.ship,.agingOk{
+  background:#eef5e8!important;
+  color:#63835e!important;
+  border-color:#cbdcbd!important;
+}
+.coverageTag.light,.coverageTag.over,.reasonTag,.tagWarn,.actionTag.chase,.agingWarn{
+  background:#fff3dc!important;
+  color:#a96d20!important;
+  border-color:#ecc58e!important;
+}
+.shortageRiskHint{
+  background:#fff0d8!important;
+  color:#9c5c15!important;
+  border-color:#edc08b!important;
+  font-weight:900!important;
+  box-shadow:inset 4px 0 0 #efad55!important;
+}
+tr.hasShortageRisk td{
+  background:#fff8ec!important;
+}
+tr.hasShortageRisk:hover td{
+  background:#fff0d8!important;
+}
+tr.hasShortageRisk td.shortageRiskHint{
+  background:#ffe8bf!important;
+}
+.riskPulseTag{
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  padding:2px 9px;
+  border-radius:999px;
+  background:#ffe9c1;
+  color:#9c5c15;
+  border:1px solid #edc08b;
+  font-weight:900;
+}
+.tablebox::-webkit-scrollbar,.supplierComboOptions::-webkit-scrollbar,.legend::-webkit-scrollbar,.supplyBarList::-webkit-scrollbar{
+  width:10px;height:10px;
+}
+.tablebox::-webkit-scrollbar-thumb,.supplierComboOptions::-webkit-scrollbar-thumb,.legend::-webkit-scrollbar-thumb,.supplyBarList::-webkit-scrollbar-thumb{
+  background:#d8c3a5;border-radius:999px;border:2px solid #f6efe5;
+}
+.tablebox::-webkit-scrollbar-track,.supplierComboOptions::-webkit-scrollbar-track,.legend::-webkit-scrollbar-track,.supplyBarList::-webkit-scrollbar-track{
+  background:#f4eadb;border-radius:999px;
+}
+
+
+/* ===== V3.2.1 预测驾驶舱统一修复：KPI卡片与顶部指标同色，清理开发痕迹 ===== */
+#forecastPanel .sopActions .leftTitle span{
+  color:var(--ui-muted,#6f665b)!important;
+  font-weight:700!important;
+}
+.forecastCockpitGrid .forecastKpiPanel{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#forecastKpis.forecastKpiGrid{
+  gap:14px!important;
+  align-content:stretch!important;
+}
+#forecastKpis.forecastKpiGrid .kpi,
+#forecastPanel #forecastKpis .kpi,
+.forecastSection #forecastKpis .kpi{
+  background:#F6E6C8!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+  border-radius:18px!important;
+  min-height:116px!important;
+  padding:18px 16px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  color:#6E5B46!important;
+}
+#forecastKpis.forecastKpiGrid .kpi:hover,
+#forecastPanel #forecastKpis .kpi:hover{
+  background:#F6E6C8!important;
+  box-shadow:0 6px 16px rgba(88,65,32,.06)!important;
+  transform:none!important;
+}
+#forecastKpis.forecastKpiGrid .kpi span,
+#forecastPanel #forecastKpis .kpi span{
+  color:#6E5B46!important;
+  font-weight:800!important;
+  font-size:12px!important;
+}
+#forecastKpis.forecastKpiGrid .kpi b,
+#forecastPanel #forecastKpis .kpi b{
+  color:#8F540B!important;
+  font-weight:900!important;
+  font-size:26px!important;
+  line-height:1.16!important;
+}
+.forecastSitePanel,
+.forecastDetailGrid .chartCard{
+  background:#FFFDFC!important;
+  background-image:none!important;
+  border:1px solid #E6D6B8!important;
+  box-shadow:0 5px 14px rgba(88,65,32,.045)!important;
+}
+.forecastCockpitSection .compactDesc{
+  color:#7B6A57!important;
+}
+
 </style>

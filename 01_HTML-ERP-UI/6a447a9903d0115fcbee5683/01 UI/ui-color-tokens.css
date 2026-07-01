@@ -1,0 +1,81 @@
+:root {
+  /* 柔光新拟物 */
+  --color-soft-porcelain: #F4F3EF;
+  --color-cloud-white: #FFFFFF;
+  --color-honey-glow: #FFC83D;
+  --color-warm-halo: #FFE6A3;
+  --color-mist-gray: #8E8E88;
+  --color-soft-charcoal: #3E3E3C;
+
+  /* 健康暖动感 */
+  --color-warm-stone: #D6D0C6;
+  --color-ivory-panel: #F7F5F0;
+  --color-graphite-night: #20232B;
+  --color-active-lemon: #FFD93B;
+  --color-coral-burn: #FF6F61;
+  --color-pale-taupe: #E5DED3;
+
+  /* 教育粉彩卡片 */
+  --color-mint-breeze: #B7EAD8;
+  --color-warm-canvas: #F8F4EF;
+  --color-blush-course: #F4B8C0;
+  --color-cream-apricot: #F8D7A8;
+  --color-lavender-study: #C9C2F6;
+  --color-aqua-skill: #B7EEDC;
+  --color-ink-black: #111116;
+
+  /* 学习深色对比 */
+  --color-powder-blue-gray: #B9C3DA;
+  --color-clean-white: #F8F8F7;
+  --color-deep-indigo: #262445;
+  --color-neon-lime: #EDFF33;
+  --color-soft-violet: #B895FF;
+  --color-butter-cream: #F9DDA7;
+  --color-pale-violet: #D8C9FF;
+
+  /* 阴影与圆角 */
+  --radius-card: 28px;
+  --radius-control: 999px;
+  --shadow-soft-outset: 12px 12px 28px rgba(0, 0, 0, 0.08), -10px -10px 24px rgba(255, 255, 255, 0.9);
+  --shadow-card-light: 0 18px 40px rgba(32, 35, 43, 0.08);
+  --shadow-glow-yellow: 0 12px 32px rgba(255, 200, 61, 0.35);
+}
+
+.theme-neomorphism {
+  --page-bg: var(--color-soft-porcelain);
+  --surface: var(--color-cloud-white);
+  --primary: var(--color-honey-glow);
+  --primary-soft: var(--color-warm-halo);
+  --text: var(--color-soft-charcoal);
+  --text-muted: var(--color-mist-gray);
+}
+
+.theme-health-dashboard {
+  --page-bg: var(--color-warm-stone);
+  --surface: var(--color-ivory-panel);
+  --panel-strong: var(--color-graphite-night);
+  --primary: var(--color-active-lemon);
+  --danger-or-energy: var(--color-coral-burn);
+  --divider: var(--color-pale-taupe);
+}
+
+.theme-education-pastel {
+  --page-bg: var(--color-mint-breeze);
+  --surface: var(--color-warm-canvas);
+  --category-1: var(--color-blush-course);
+  --category-2: var(--color-cream-apricot);
+  --category-3: var(--color-lavender-study);
+  --category-4: var(--color-aqua-skill);
+  --text: var(--color-ink-black);
+}
+
+.theme-learning-contrast {
+  --page-bg: var(--color-powder-blue-gray);
+  --surface: var(--color-clean-white);
+  --panel-strong: var(--color-deep-indigo);
+  --primary: var(--color-neon-lime);
+  --secondary: var(--color-soft-violet);
+  --tertiary: var(--color-butter-cream);
+  --chart-soft: var(--color-pale-violet);
+}
+
