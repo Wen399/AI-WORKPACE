@@ -1816,8 +1816,12 @@ function purchasePlanForShip(shipIdx, leadDays, months, today){
   let cover=purchaseCoverageMonths(leadDays,today);
   let orderIdx=Math.max(0, shipIdx-cover+1);
   if(orderIdx>=months.length) return null;
-  let ready=addDays(new Date(months[orderIdx].getFullYear(),months[orderIdx].getMonth(),Math.min(today.getDate(),endOfMonth(months[orderIdx]).getDate())),leadDays);
-  return {orderIdx, readyIdx:Math.max(0, (ready.getFullYear()-months[0].getFullYear())*12 + ready.getMonth()-months[0].getMonth()), coverMonths:cover};
+  // v3.9 PSI修复：readyIdx 必须与 Excel 覆盖窗口一致。
+  // 旧逻辑用 addDays(orderDate, leadDays) 按自然日落月，60天可能落到8月底，导致7月采购被错误释放到8月出运。
+  // 业务口径是“覆盖几个月”决定可出运窗口：覆盖3个月 = 下单月后的第3个月才可支撑出运。
+  // 因此 readyIdx = orderIdx + cover - 1，避免新增采购在覆盖窗口之前进入 availableDom。
+  let readyIdx=Math.min(months.length-1, orderIdx + cover - 1);
+  return {orderIdx, readyIdx, coverMonths:cover};
 }
 function readWorkbook(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=e=>{try{let wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});res(wb)}catch(err){rej(err)}};r.readAsArrayBuffer(file)})}
 function rowsFromWs(ws){
@@ -2123,9 +2127,36 @@ function buildFilters(rows){
 
 function forecastValByMonth(row, date){
   const yy=String(date.getFullYear()).slice(-2), yyyy=String(date.getFullYear()), m=date.getMonth()+1;
+  const targetYm=ym(date);
   const cands=[`${yy}年${m}月销售预计`,`${yy}年${m}月销售预估`,`${yy}年${m}月剩余7天销售预计`,`${yy}年${m}月剩余天数销售预计`,`${yyyy}年${m}月销售预计`,`${yyyy}年${m}月销售预估`,`${yyyy}年${m}月剩余7天销售预计`,`${yyyy}年${m}月剩余天数销售预计`,`${m}月销售预计`,`${m}月销售预估`,`${m}月销量预估`,`${m}月运营预估`,`${m}月剩余7天销售预计`];
+
+  // v3.8 PSI销售预估口径修复：
+  // Sheet2主PSI/S&OP销售预估也需要识别「26年7月（7.1-7.31）销售预计」这类带括号日期范围的表头。
+  // 若范围是整月（7.1-7.31），系数=1；若是部分周期（7.5-7.31），按 全月天数/覆盖天数 还原成全月口径。
+  function valueWithRestore(header){
+    const raw=row[header];
+    if(raw===undefined || raw===null || String(raw).trim()==='') return null;
+    const info=partialRangeInfoFromHeader(header,targetYm);
+    const factor=info?info.factor:1;
+    return n(raw)*factor;
+  }
+
+  // 1）优先兼容原来的标准表头。
   for(const k of cands){
-    if(row[k]!==undefined && row[k]!==null && String(row[k]).trim()!=='') return n(row[k]);
+    const v=valueWithRestore(k);
+    if(v!==null) return v;
+  }
+
+  // 2）兜底识别带日期范围/带空格/带括号的销售预估表头。
+  // 例如：26年7月（7.1-7/31）销售预计、2026年7月(7.5-7.31)销售预估。
+  const fallbackYear=date.getFullYear();
+  for(const k of Object.keys(row||{})){
+    const hk=headerKey(k);
+    if(!/(销售预计|销售预估|销量预计|销量预估|运营预估|forecast)/i.test(s(k))) continue;
+    const mm=targetMonthFromForecastHeader(k,fallbackYear);
+    if(mm!==targetYm) continue;
+    const v=valueWithRestore(k);
+    if(v!==null) return v;
   }
   return null;
 }
