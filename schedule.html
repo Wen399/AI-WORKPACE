@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的日程表</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans CJK SC', 'WenQuanYi Micro Hei', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 2.2em;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 30px;
+    font-size: 0.95em;
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 16px 28px;
+    text-align: center;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .stat-num { font-size: 2em; font-weight: 700; }
+  .stat-label { font-size: 0.85em; opacity: 0.8; margin-top: 4px; }
+  .table-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    background: #f8f9fc;
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 0.85em;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  tbody td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+    font-size: 0.95em;
+  }
+  tbody tr:hover { background: #f9fafb; }
+  tbody tr:last-child td { border-bottom: none; }
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+  }
+  .status-pending { background: #fef3c7; color: #92400e; }
+  .status-done { background: #d1fae5; color: #065f46; }
+  .status-overdue { background: #fee2e2; color: #991b1b; }
+  .deadline-urgent { color: #dc2626; font-weight: 600; }
+  .deadline-normal { color: #6b7280; }
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+  }
+  .empty-state p { font-size: 1.1em; }
+  .empty-state .icon { font-size: 3em; margin-bottom: 12px; }
+  .footer {
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    margin-top: 24px;
+    font-size: 0.85em;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>我的日程表</h1>
+  <p class="subtitle">每日任务追踪 · 随时更新</p>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-num" id="totalCount">0</div>
+      <div class="stat-label">总任务</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="pendingCount">0</div>
+      <div class="stat-label">待完成</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="doneCount">0</div>
+      <div class="stat-label">已完成</div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 5%">#</th>
+          <th style="width: 45%">任务内容</th>
+          <th style="width: 18%">截止日期</th>
+          <th style="width: 15%">状态</th>
+          <th style="width: 17%">添加日期</th>
+        </tr>
+      </thead>
+      <tbody id="taskBody">
+        <tr class="empty-state">
+          <td colspan="5">
+            <div class="icon">📋</div>
+            <p>暂无任务，在对话中告诉我即可添加</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="footer">最后更新：2026-07-01</p>
+</div>
+<script>
+  const tasks = [
+    { content: '把今日IT会议痛点提交到云效里', deadline: '2026-07-02', status: 'pending', dateAdded: '2026-07-01' },
+    { content: '参加计划会议，会后整理会议纪要', deadline: '2026-07-02', status: 'pending', dateAdded: '2026-07-01' }
+  ];
+  function render() {
+    const tbody = document.getElementById('taskBody');
+    const total = document.getElementById('totalCount');
+    const pending = document.getElementById('pendingCount');
+    const done = document.getElementById('doneCount');
+    if (tasks.length === 0) {
+      tbody.innerHTML = '<tr class="empty-state"><td colspan="5"><div class="icon">📋</div><p>暂无任务，在对话中告诉我即可添加</p></td></tr>';
+    } else {
+      tbody.innerHTML = tasks.map((t, i) => {
+        const isOverdue = t.status === 'pending' && new Date(t.deadline) < new Date();
+        let statusClass = 'status-pending';
+        let statusText = '待完成';
+        if (t.status === 'done') { statusClass = 'status-done'; statusText = '已完成'; }
+        else if (isOverdue) { statusClass = 'status-overdue'; statusText = '已逾期'; }
+        let deadlineClass = 'deadline-normal';
+        if (isOverdue) deadlineClass = 'deadline-urgent';
+        else {
+          const diff = (new Date(t.deadline) - new Date()) / (1000 * 60 * 60 * 24);
+          if (diff <= 2) deadlineClass = 'deadline-urgent';
+        }
+        return `<tr>
+          <td>${i + 1}</td>
+          <td>${t.content}</td>
+          <td class="${deadlineClass}">${t.deadline}</td>
+          <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+          <td>${t.dateAdded}</td>
+        </tr>`;
+      }).join('');
+    }
+    total.textContent = tasks.length;
+    pending.textContent = tasks.filter(t => t.status === 'pending').length;
+    done.textContent = tasks.filter(t => t.status === 'done').length;
+  }
+  render();
+</script>
+</body>
+</html>
